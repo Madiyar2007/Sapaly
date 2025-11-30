@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты мира</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .consultation-banner {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .consultation-banner h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .consultation-banner p {
+            font-size: 17px;
+            color: #86868b;
+            margin-bottom: 30px;
+        }
+
+        .consultation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .consultation-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: #0071e3;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .consultation-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .consultation-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .consultation-btn:active {
+            transform: scale(0.96);
+        }
+
+        .consultation-btn.whatsapp {
+            background: #25D366;
+        }
+
+        .consultation-btn.whatsapp:hover {
+            background: #20BA5A;
+        }
+
+        .consultation-btn.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        .consultation-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .country-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border: 1px solid #e5e5e7;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .country-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 113, 227, 0.05), transparent);
+            transition: left 0.5s;
+        }
+
+        .country-card:hover::before {
+            left: 100%;
+        }
+
+        .country-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: #0071e3;
+        }
+
+        .country-card:active {
+            transform: translateY(-2px);
+        }
+
+        .country-flag {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            line-height: 1;
+        }
+
+        .country-card h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .country-card .description {
+            font-size: 15px;
+            color: #86868b;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .country-card .stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0071e3;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .country-card .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #0071e3;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .country-card .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .country-card .btn:active::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .country-card:hover .btn {
+            background: #0051d5;
+        }
+
+        .country-card .btn:active {
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 768px) {
+            .countries-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .header .subtitle {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Университеты мира</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="consultation-banner">
+            <h2>🎓 Бесплатная консультация</h2>
+            <p>Зарегистрируйтесь на бесплатную консультацию, и мы отправим вам код доступа в Instagram DM</p>
+            <div class="consultation-buttons">
+                <a href="https://wa.me/77773133500?text=Здравствуйте!%20Хочу%20получить%20бесплатную%20консультацию%20и%20код%20доступа%20к%20таблицам" target="_blank" class="consultation-btn whatsapp" id="whatsappBtn">
+                    <span>💬</span>
+                    <span>Зарегистрироваться через WhatsApp</span>
+                </a>
+                <a href="https://instagram.com/sapaly.education" target="_blank" class="consultation-btn instagram" id="instagramBtn">
+                    <span>📱</span>
+                    <span>Зарегистрироваться через Instagram</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="countries-grid">
+            <a href="spain.html" class="country-card">
+                <span class="country-flag">🇪🇸</span>
+                <h2>Испания</h2>
+                <div class="description">
+                    Топовые университеты Мадрида, Барселоны и других городов.<br>
+                    Частные и государственные вузы с доступной стоимостью.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$2K-26K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">30-85%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="china.html" class="country-card">
+                <span class="country-flag">🇨🇳</span>
+                <h2>Китай</h2>
+                <div class="description">
+                    Ведущие университеты Пекина, Шанхая и других городов.<br>
+                    Отличное соотношение цена-качество, сильные программы.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$2.5K-4.8K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15-60%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="usa.html" class="country-card">
+                <span class="country-flag">🇺🇸</span>
+                <h2>США</h2>
+                <div class="description">
+                    Топовые университеты Америки: Harvard, MIT, Stanford и другие.<br>
+                    Лучшие программы в мире, максимальная финансовая помощь.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$15K-60K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5-30%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="germany.html" class="country-card">
+                <span class="country-flag">🇩🇪</span>
+                <h2>Германия</h2>
+                <div class="description">
+                    Бесплатное образование в государственных вузах.<br>
+                    Сильные технические и гуманитарные программы.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$0-5K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">40-70%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="korea.html" class="country-card">
+                <span class="country-flag">🇰🇷</span>
+                <h2>Южная Корея</h2>
+                <div class="description">
+                    Ведущие университеты Сеула: SNU, Yonsei, Korea University.<br>
+                    Современные технологии, сильные программы по IT и бизнесу.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$3K-8K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">25-55%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="canada.html" class="country-card">
+                <span class="country-flag">🇨🇦</span>
+                <h2>Канада</h2>
+                <div class="description">
+                    Топовые университеты: U of Toronto, UBC, McGill.<br>
+                    Высокое качество образования, возможность иммиграции.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$8K-25K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">30-60%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="turkey.html" class="country-card">
+                <span class="country-flag">🇹🇷</span>
+                <h2>Турция</h2>
+                <div class="description">
+                    Самый простой и доступный вариант для иностранцев.<br>
+                    Частные вузы без экзаменов, госвузы с TR-YÖS. Türkiye Bursları покрывает всё.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$0.8K-22K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">7-80%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="italy.html" class="country-card">
+                <span class="country-flag">🇮🇹</span>
+                <h2>Италия</h2>
+                <div class="description">
+                    Старейшие университеты Европы. DSU стипендии доступны.<br>
+                    От Болоньи до Милана - топовое образование по доступной цене.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$1K-14K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">45-77%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="hungary.html" class="country-card">
+                <span class="country-flag">🇭🇺</span>
+                <h2>Венгрия</h2>
+                <div class="description">
+                    Stipendium Hungaricum - полное покрытие всех расходов.<br>
+                    От Будапешта до Дебрецена - качественное европейское образование.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$2K-12K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">25-60%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="france.html" class="country-card">
+                <span class="country-flag">🇫🇷</span>
+                <h2>Франция</h2>
+                <div class="description">
+                    От Сорбонны до HEC Paris - элитное образование.<br>
+                    Grande École система, щедрые стипендии для талантливых.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$3K-25K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5-58%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="japan.html" class="country-card">
+                <span class="country-flag">🇯🇵</span>
+                <h2>Япония</h2>
+                <div class="description">
+                    MEXT стипендии - полное покрытие обучения и проживания.<br>
+                    От Токио до Киото - топовое образование в Азии.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$5K-13K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">20-72%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="malaysia.html" class="country-card">
+                <span class="country-flag">🇲🇾</span>
+                <h2>Малайзия</h2>
+                <div class="description">
+                    Отличное соотношение цена-качество. Филиалы топовых вузов.<br>
+                    От Куала-Лумпура до Пенанга - качественное образование в Азии.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$3K-9K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">35-68%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="singapore.html" class="country-card">
+                <span class="country-flag">🇸🇬</span>
+                <h2>Сингапур</h2>
+                <div class="description">
+                    Лучшие вузы Азии. NUS и NTU в топ-20 мира.<br>
+                    Щедрые стипендии для талантливых студентов.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$8K-25K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15-45%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="switzerland.html" class="country-card">
+                <span class="country-flag">🇨🇭</span>
+                <h2>Швейцария</h2>
+                <div class="description">
+                    ETH Zurich и EPFL - лучшие технические вузы Европы.<br>
+                    Низкая стоимость обучения, высокое качество образования.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$1.5K-3K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">25-45%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+
+            <a href="austria.html" class="country-card">
+                <span class="country-flag">🇦🇹</span>
+                <h2>Австрия</h2>
+                <div class="description">
+                    Низкая стоимость обучения. Качественное европейское образование.<br>
+                    От Вены до Граца - доступные топовые университеты.
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50</span>
+                        <div class="stat-label">Университетов</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">$1.5K</span>
+                        <div class="stat-label">Стоимость/год</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">20-48%</span>
+                        <div class="stat-label">Поступление</div>
+                    </div>
+                </div>
+                <div class="btn">Открыть таблицу →</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Вибрация и эффекты как у Yandex
+        function addHapticFeedback(element) {
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+            element.style.transform = 'scale(0.97)';
+            setTimeout(() => {
+                element.style.transform = '';
+            }, 100);
+        }
+
+        document.querySelectorAll('.consultation-btn, .country-card, .btn').forEach(btn => {
+            btn.addEventListener('mousedown', function() {
+                addHapticFeedback(this);
+            });
+            
+            btn.addEventListener('touchstart', function() {
+                addHapticFeedback(this);
+            }, { passive: true });
+        });
+
+        document.getElementById('whatsappBtn').addEventListener('click', function() {
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30]);
+            }
+        });
+
+        document.getElementById('instagramBtn').addEventListener('click', function() {
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30]);
+            }
+        });
+    </script>
+</body>
+</html>
