@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты Южная Корея</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .modal p {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .flag-large {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f5f5f7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .code-input {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 500;
+            padding: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:hover {
+            background: #0051d5;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e7;
+        }
+
+        .error-message {
+            color: #bf2600;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message {
+            color: #00684a;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .country-flag {
+            font-size: 120px;
+            margin-bottom: 24px;
+            display: block;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 300px);
+            position: relative;
+        }
+        
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f5f5f7;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #86868b;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #6e6e73;
+        }
+
+        table {
+            width: 100%;
+            min-width: 3000px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f5f5f7;
+            border-bottom: 2px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            color: #86868b;
+            white-space: nowrap;
+            background: #f5f5f7;
+            min-width: 120px;
+        }
+        
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 101;
+            background: #f5f5f7;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e7;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f7;
+        }
+
+        td {
+            padding: 14px 10px;
+            vertical-align: top;
+            color: #1d1d1f;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+            min-width: 120px;
+        }
+        
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 50;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover td:first-child {
+            background: #f5f5f7;
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .percentage.high {
+            background: #d1f2eb;
+            color: #00684a;
+        }
+
+        .percentage.medium {
+            background: #fff4e6;
+            color: #b95000;
+        }
+
+        .percentage.low {
+            background: #ffe5e5;
+            color: #bf2600;
+        }
+
+        .website-link {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .website-link:hover {
+            color: #0051d5;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px 16px;
+                max-width: 95%;
+                border-radius: 16px;
+            }
+
+            .modal h2 {
+                font-size: 24px;
+            }
+
+            .modal p {
+                font-size: 14px;
+            }
+
+            .flag-large {
+                font-size: 60px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .country-flag {
+                font-size: 80px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header .subtitle {
+                font-size: 16px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                border-radius: 12px;
+                max-height: calc(100vh - 200px);
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-wrapper::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 2800px;
+            }
+
+            th {
+                padding: 10px 6px;
+                font-size: 10px;
+                min-width: 100px;
+            }
+            
+            td {
+                padding: 10px 6px;
+                font-size: 11px;
+                min-width: 100px;
+                max-width: 150px;
+            }
+            
+            td:first-child {
+                min-width: 140px;
+                max-width: 180px;
+            }
+
+            .university-name {
+                font-size: 13px;
+            }
+
+            .price {
+                font-size: 12px;
+            }
+            
+            th:first-child {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div class="overlay" id="registrationOverlay">
+        <div class="modal">
+            <span class="flag-large">🇰🇷</span>
+            <h2>Регистрация на консультацию</h2>
+            <p>Заполните форму, и мы отправим вам код доступа в Instagram DM</p>
+            
+            <form id="registrationForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="regName">Ваше имя *</label>
+                    <input type="text" id="regName" name="name" required placeholder="Мадияр Бегенов">
+                </div>
+                <div class="form-group">
+                    <label for="regMessage">Расскажите о себе (страна, специальность, бюджет) *</label>
+                    <textarea id="regMessage" name="message" required placeholder="Хочу поступить на программу бакалавриата по бизнесу. Бюджет до $15,000 в год."></textarea>
+                </div>
+                <button type="submit" class="btn" id="regSubmitBtn">Отправить заявку</button>
+                <div class="success-message" id="regSuccessMessage">✅ Заявка отправлена! Проверьте Instagram DM для получения кода доступа.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно ввода кода -->
+    <div class="overlay hidden" id="codeOverlay">
+        <div class="modal">
+            <span class="flag-large">🇰🇷</span>
+            <h2>Введите кодовое слово</h2>
+            <p>Введите кодовое слово, которое мы отправили вам в Instagram DM</p>
+            
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" class="code-input" id="codeInput" placeholder="Введите слово" autocomplete="off">
+                </div>
+                <button type="submit" class="btn" id="codeSubmitBtn">Открыть таблицу</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegistration()">Вернуться к регистрации</button>
+                <div class="error-message" id="codeErrorMessage">❌ Неверное кодовое слово. Проверьте Instagram DM и попробуйте еще раз.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px; line-height: 1;">🇰🇷</div>
+            <h1>Университеты Южная Корея</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Университет</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                        <th>Стоимость<br>обучения</th>
+                        <th>Процент<br>поступления</th>
+                        <th>Макс. фин.<br>помощь</th>
+                        <th>Полный<br>грант?</th>
+                        <th>Дедлайн<br>ранней</th>
+                        <th>Дедлайн<br>основной</th>
+                        <th>TOEFL/<br>IELTS/<br>Duolingo</th>
+                        <th>SAT</th>
+                        <th>Эссе</th>
+                        <th>Рекомендательные<br>письма</th>
+                        <th>Стоимость<br>заявки</th>
+                        <th>Ссылка на<br>заявку</th>
+                        <th>Сайт<br>университета</th>
+                        <th>Сайт<br>фин. помощи</th>
+                        <th>Рейтинг<br>по стране</th>
+                        <th>Рейтинг<br>в мире</th>
+                        <th>Профессии</th>
+                        <th>Доп.<br>комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="university-name">Seoul National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage low">25%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.snu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.snu.ac.kr" target="_blank" class="website-link">snu.ac.kr</a></td>
+                        <td><a href="https://www.snu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Топ-1 вуз Кореи, сильнейший во всех областях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yonsei University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage medium">30%</span></td>
+                        <td class="price">$5,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.yonsei.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yonsei.ac.kr" target="_blank" class="website-link">yonsei.ac.kr</a></td>
+                        <td><a href="https://www.yonsei.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Медицина, Бизнес, Экономика</td>
+                        <td>Элитный вуз, сильный в медицине и бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Korea University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$7,500</td>
+                        <td><span class="percentage medium">35%</span></td>
+                        <td class="price">$4,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.korea.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.korea.ac.kr" target="_blank" class="website-link">korea.ac.kr</a></td>
+                        <td><a href="https://www.korea.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Элитный вуз, сильный в бизнесе и праве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">KAIST</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Тэджон</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage low">20%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kaist.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kaist.ac.kr" target="_blank" class="website-link">kaist.ac.kr</a></td>
+                        <td><a href="https://www.kaist.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Сильнейший технический вуз, обучение на английском</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">POSTECH</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Пхохан</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage low">18%</span></td>
+                        <td class="price">$4,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.postech.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.postech.ac.kr" target="_blank" class="website-link">postech.ac.kr</a></td>
+                        <td><a href="https://www.postech.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Различные</td>
+                        <td>Элитный технический вуз, обучение на английском</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sungkyunkwan University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.skku.edu" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.skku.edu" target="_blank" class="website-link">skku.edu</a></td>
+                        <td><a href="https://www.skku.edu" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>30-50</td>
+                        <td>800-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Старинный вуз, сильный в бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hanyang University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,500</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hanyang.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hanyang.ac.kr" target="_blank" class="website-link">hanyang.ac.kr</a></td>
+                        <td><a href="https://www.hanyang.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Сильный в инженерии и бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ewha Womans University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ewha.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ewha.ac.kr" target="_blank" class="website-link">ewha.ac.kr</a></td>
+                        <td><a href="https://www.ewha.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Лучший женский вуз, сильный в гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kyung Hee University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.khu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.khu.ac.kr" target="_blank" class="website-link">khu.ac.kr</a></td>
+                        <td><a href="https://www.khu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Сильный в медицине и гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sogang University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,800</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sogang.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sogang.ac.kr" target="_blank" class="website-link">sogang.ac.kr</a></td>
+                        <td><a href="https://www.sogang.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Сильный в бизнесе и гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Pusan National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Пусан</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.pnu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pnu.ac.kr" target="_blank" class="website-link">pnu.ac.kr</a></td>
+                        <td><a href="https://www.pnu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Топовый вуз второго города, доступная стоимость</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Inha University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Инчхон</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.inha.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.inha.ac.kr" target="_blank" class="website-link">inha.ac.kr</a></td>
+                        <td><a href="https://www.inha.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильный в инженерии, доступная стоимость</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Chung-Ang University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cau.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cau.ac.kr" target="_blank" class="website-link">cau.ac.kr</a></td>
+                        <td><a href="https://www.cau.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Элитный вуз. Сильный в медиа, искусстве, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Konkuk University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,500</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.konkuk.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.konkuk.ac.kr" target="_blank" class="website-link">konkuk.ac.kr</a></td>
+                        <td><a href="https://www.konkuk.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Элитный вуз. Сильный в бизнесе, медицине, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hankuk University of Foreign Studies</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hufs.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hufs.ac.kr" target="_blank" class="website-link">hufs.ac.kr</a></td>
+                        <td><a href="https://www.hufs.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Лучший языковой вуз. Сильнейший в иностранных языках, международных отношениях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Korea University of Technology and Education</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чхонан</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.koreatech.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.koreatech.ac.kr" target="_blank" class="website-link">koreatech.ac.kr</a></td>
+                        <td><a href="https://www.koreatech.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Gyeongsang National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чинджу</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gnu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gnu.ac.kr" target="_blank" class="website-link">gnu.ac.kr</a></td>
+                        <td><a href="https://www.gnu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Южной Кореи. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Chonnam National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кванджу</td>
+                        <td class="price">$3,800</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$1,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.jnu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.jnu.ac.kr" target="_blank" class="website-link">jnu.ac.kr</a></td>
+                        <td><a href="https://www.jnu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Южной Кореи. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Chonbuk National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чонджу</td>
+                        <td class="price">$3,700</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$1,800</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.jbnu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.jbnu.ac.kr" target="_blank" class="website-link">jbnu.ac.kr</a></td>
+                        <td><a href="https://www.jbnu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Южной Кореи. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Chungnam National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Тэджон</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">59%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cnu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cnu.ac.kr" target="_blank" class="website-link">cnu.ac.kr</a></td>
+                        <td><a href="https://www.cnu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Южной Кореи. Сильный в науках, инженерии, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Jeju National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чеджу</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$1,700</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.jejunu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.jejunu.ac.kr" target="_blank" class="website-link">jejunu.ac.kr</a></td>
+                        <td><a href="https://www.jejunu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Вуз острова Чеджу. Сильный в науках, туризме, морских науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kangwon National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чхунчхон</td>
+                        <td class="price">$3,600</td>
+                        <td><span class="percentage high">63%</span></td>
+                        <td class="price">$1,800</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kangwon.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kangwon.ac.kr" target="_blank" class="website-link">kangwon.ac.kr</a></td>
+                        <td><a href="https://www.kangwon.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Канвондо. Сильный в науках, инженерии, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kyungpook National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Тэгу</td>
+                        <td class="price">$4,200</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,100</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.knu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.knu.ac.kr" target="_blank" class="website-link">knu.ac.kr</a></td>
+                        <td><a href="https://www.knu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Тэгу. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Pukyong National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Пусан</td>
+                        <td class="price">$3,800</td>
+                        <td><span class="percentage high">61%</span></td>
+                        <td class="price">$1,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.pknu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pknu.ac.kr" target="_blank" class="website-link">pknu.ac.kr</a></td>
+                        <td><a href="https://www.pknu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Вуз Пусана. Сильный в морских науках, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Gyeongsang National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чинджу</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gnu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gnu.ac.kr" target="_blank" class="website-link">gnu.ac.kr</a></td>
+                        <td><a href="https://www.gnu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Южной Кореи. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ajou University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сувон</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$2,800</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ajou.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ajou.ac.kr" target="_blank" class="website-link">ajou.ac.kr</a></td>
+                        <td><a href="https://www.ajou.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в инженерии, медицине, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Catholic University of Korea</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.catholic.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.catholic.ac.kr" target="_blank" class="website-link">catholic.ac.kr</a></td>
+                        <td><a href="https://www.catholic.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Католический вуз. Сильный в медицине, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Dongguk University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,800</td>
+                        <td><span class="percentage high">51%</span></td>
+                        <td class="price">$2,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.dongguk.edu" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dongguk.edu" target="_blank" class="website-link">dongguk.edu</a></td>
+                        <td><a href="https://www.dongguk.edu" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Буддийский вуз. Сильный в медицине, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hallym University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чхунчхон</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hallym.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hallym.ac.kr" target="_blank" class="website-link">hallym.ac.kr</a></td>
+                        <td><a href="https://www.hallym.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика</td>
+                        <td>Частный вуз. Сильный в медицине, науках, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Inje University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кимхэ</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.inje.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.inje.ac.kr" target="_blank" class="website-link">inje.ac.kr</a></td>
+                        <td><a href="https://www.inje.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kookmin University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,200</td>
+                        <td><span class="percentage medium">49%</span></td>
+                        <td class="price">$3,100</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kookmin.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kookmin.ac.kr" target="_blank" class="website-link">kookmin.ac.kr</a></td>
+                        <td><a href="https://www.kookmin.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Дизайн</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, дизайне</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kwangwoon University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">53%</span></td>
+                        <td class="price">$2,800</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kw.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kw.ac.kr" target="_blank" class="website-link">kw.ac.kr</a></td>
+                        <td><a href="https://www.kw.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в IT, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Myongji University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,800</td>
+                        <td><span class="percentage high">51%</span></td>
+                        <td class="price">$2,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mju.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mju.ac.kr" target="_blank" class="website-link">mju.ac.kr</a></td>
+                        <td><a href="https://www.mju.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sejong University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sejong.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sejong.ac.kr" target="_blank" class="website-link">sejong.ac.kr</a></td>
+                        <td><a href="https://www.sejong.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Частный вуз. Сильный в гостиничном деле, туризме, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Soongsil University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,700</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$2,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ssu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ssu.ac.kr" target="_blank" class="website-link">ssu.ac.kr</a></td>
+                        <td><a href="https://www.ssu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в IT, бизнесе, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sookmyung Women's University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,500</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$3,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sookmyung.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sookmyung.ac.kr" target="_blank" class="website-link">sookmyung.ac.kr</a></td>
+                        <td><a href="https://www.sookmyung.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Женский вуз. Сильный в гуманитариях, науках, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">The Catholic University of Korea</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.catholic.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.catholic.ac.kr" target="_blank" class="website-link">catholic.ac.kr</a></td>
+                        <td><a href="https://www.catholic.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Католический вуз. Сильный в медицине, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Ulsan</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Ульсан</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">57%</span></td>
+                        <td class="price">$2,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ulsan.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ulsan.ac.kr" target="_blank" class="website-link">ulsan.ac.kr</a></td>
+                        <td><a href="https://www.ulsan.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Ульсана. Сильный в инженерии, науках, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yeungnam University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кёнсан</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.yu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yu.ac.kr" target="_blank" class="website-link">yu.ac.kr</a></td>
+                        <td><a href="https://www.yu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Chosun University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кванджу</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.chosun.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.chosun.ac.kr" target="_blank" class="website-link">chosun.ac.kr</a></td>
+                        <td><a href="https://www.chosun.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Dankook University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чхонан/Йонгин</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">53%</span></td>
+                        <td class="price">$2,800</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.dankook.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dankook.ac.kr" target="_blank" class="website-link">dankook.ac.kr</a></td>
+                        <td><a href="https://www.dankook.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Duksung Women's University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.duksung.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.duksung.ac.kr" target="_blank" class="website-link">duksung.ac.kr</a></td>
+                        <td><a href="https://www.duksung.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Женский вуз. Сильный в гуманитариях, науках, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Gachon University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Соннам</td>
+                        <td class="price">$5,200</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$2,600</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gachon.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gachon.ac.kr" target="_blank" class="website-link">gachon.ac.kr</a></td>
+                        <td><a href="https://www.gachon.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hanseo University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сосан</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hanseo.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hanseo.ac.kr" target="_blank" class="website-link">hanseo.ac.kr</a></td>
+                        <td><a href="https://www.hanseo.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Частный вуз. Сильный в авиации, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hansung University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hansung.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hansung.ac.kr" target="_blank" class="website-link">hansung.ac.kr</a></td>
+                        <td><a href="https://www.hansung.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hoseo University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Асан</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hoseo.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hoseo.ac.kr" target="_blank" class="website-link">hoseo.ac.kr</a></td>
+                        <td><a href="https://www.hoseo.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hannam University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Тэджон</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hannam.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hannam.ac.kr" target="_blank" class="website-link">hannam.ac.kr</a></td>
+                        <td><a href="https://www.hannam.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Honam University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кванджу</td>
+                        <td class="price">$4,600</td>
+                        <td><span class="percentage high">57%</span></td>
+                        <td class="price">$2,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.honam.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.honam.ac.kr" target="_blank" class="website-link">honam.ac.kr</a></td>
+                        <td><a href="https://www.honam.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hyupsung University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Хвасон</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hyupsung.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hyupsung.ac.kr" target="_blank" class="website-link">hyupsung.ac.kr</a></td>
+                        <td><a href="https://www.hyupsung.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Jeonju University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чонджу</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.jj.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.jj.ac.kr" target="_blank" class="website-link">jj.ac.kr</a></td>
+                        <td><a href="https://www.jj.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kangnam University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Йонгин</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kangnam.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kangnam.ac.kr" target="_blank" class="website-link">kangnam.ac.kr</a></td>
+                        <td><a href="https://www.kangnam.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kaya University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кимхэ</td>
+                        <td class="price">$4,600</td>
+                        <td><span class="percentage high">57%</span></td>
+                        <td class="price">$2,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kaya.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kaya.ac.kr" target="_blank" class="website-link">kaya.ac.kr</a></td>
+                        <td><a href="https://www.kaya.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Keimyung University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Тэгу</td>
+                        <td class="price">$5,200</td>
+                        <td><span class="percentage high">53%</span></td>
+                        <td class="price">$2,600</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kmu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kmu.ac.kr" target="_blank" class="website-link">kmu.ac.kr</a></td>
+                        <td><a href="https://www.kmu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в медицине, бизнесе, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kongju National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Конджу</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kongju.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kongju.ac.kr" target="_blank" class="website-link">kongju.ac.kr</a></td>
+                        <td><a href="https://www.kongju.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Государственный вуз. Сильный в образовании, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Konyang University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Нонсан</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.konyang.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.konyang.ac.kr" target="_blank" class="website-link">konyang.ac.kr</a></td>
+                        <td><a href="https://www.konyang.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kumoh National Institute of Technology</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Кumi</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kumoh.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kumoh.ac.kr" target="_blank" class="website-link">kumoh.ac.kr</a></td>
+                        <td><a href="https://www.kumoh.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kyungnam University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чханвон</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">57%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kyungnam.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kyungnam.ac.kr" target="_blank" class="website-link">kyungnam.ac.kr</a></td>
+                        <td><a href="https://www.kyungnam.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Mokpo National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Мокпхо</td>
+                        <td class="price">$3,800</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$1,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mokpo.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mokpo.ac.kr" target="_blank" class="website-link">mokpo.ac.kr</a></td>
+                        <td><a href="https://www.mokpo.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, морских науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Namseoul University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Чхонан</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nsu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nsu.ac.kr" target="_blank" class="website-link">nsu.ac.kr</a></td>
+                        <td><a href="https://www.nsu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Pai Chai University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Тэджон</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.pcu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pcu.ac.kr" target="_blank" class="website-link">pcu.ac.kr</a></td>
+                        <td><a href="https://www.pcu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sangmyung University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сеул</td>
+                        <td class="price">$5,800</td>
+                        <td><span class="percentage high">51%</span></td>
+                        <td class="price">$2,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.smu.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.smu.ac.kr" target="_blank" class="website-link">smu.ac.kr</a></td>
+                        <td><a href="https://www.smu.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, искусстве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Soonchunhyang University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Асан</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sch.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sch.ac.kr" target="_blank" class="website-link">sch.ac.kr</a></td>
+                        <td><a href="https://www.sch.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sunchon National University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Сунчхон</td>
+                        <td class="price">$3,800</td>
+                        <td><span class="percentage high">61%</span></td>
+                        <td class="price">$1,900</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sunchon.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sunchon.ac.kr" target="_blank" class="website-link">sunchon.ac.kr</a></td>
+                        <td><a href="https://www.sunchon.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, сельском хозяйстве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Wonkwang University</div>
+                        </td>
+                        <td>Южная Корея</td>
+                        <td>Иксан</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$2,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOPIK 4+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.wku.ac.kr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.wku.ac.kr" target="_blank" class="website-link">wku.ac.kr</a></td>
+                        <td><a href="https://www.wku.ac.kr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Кодовое слово для Южная Корея (будет отправлено в Instagram DM после регистрации)
+        const COUNTRY_CODE = 'СЕУЛТАУЭР';
+        const COUNTRY_NAME = 'Южная Корея';
+        const STORAGE_KEY = 'korea_authenticated';
+
+        // Проверяем, был ли пользователь уже авторизован
+        if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+            document.getElementById('registrationOverlay').classList.add('hidden');
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const name = form.regName.value;
+            const message = form.regMessage.value;
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30, 20, 30]);
+            }
+            
+            // Формируем сообщение для WhatsApp
+            const whatsappMessage = `Здравствуйте! Хочу зарегистрироваться на бесплатную консультацию по поступлению в университеты.\n\nИмя: ${name}\n\n${message ? 'О себе: ' + message : ''}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Открываем WhatsApp
+            window.open(`https://wa.me/77773133500?text=${encodedMessage}`, '_blank');
+            
+            // Показываем сообщение об успехе
+            document.getElementById('regSuccessMessage').style.display = 'block';
+            form.reset();
+            
+            // Через 2 секунды переходим к вводу кода
+            setTimeout(() => {
+                document.getElementById('registrationOverlay').classList.add('hidden');
+                document.getElementById('codeOverlay').classList.remove('hidden');
+                document.getElementById('codeInput').focus();
+            }, 2000);
+        }
+
+        function handleCodeSubmit(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('codeInput');
+            const error = document.getElementById('codeErrorMessage');
+            const codeOverlay = document.getElementById('codeOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+
+            const inputValue = input.value.toUpperCase().trim();
+            if (inputValue === COUNTRY_CODE.toUpperCase()) {
+                // Правильное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50]);
+                }
+                codeOverlay.classList.add('hidden');
+                mainContent.style.display = 'block';
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } else {
+                // Неверное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#bf2600';
+                setTimeout(() => {
+                    input.style.borderColor = '#d2d2d7';
+                }, 1000);
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('registrationOverlay').classList.remove('hidden');
+        }
+
+        // Автоматическая проверка при вводе 4 цифр
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                codeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleCodeSubmit(e);
+                    }
+                });
+            }
+
+            // Эффекты для всех кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

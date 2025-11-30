@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты Китай</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .modal p {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .flag-large {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f5f5f7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .code-input {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 500;
+            padding: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:hover {
+            background: #0051d5;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e7;
+        }
+
+        .error-message {
+            color: #bf2600;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message {
+            color: #00684a;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .country-flag {
+            font-size: 120px;
+            margin-bottom: 24px;
+            display: block;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 300px);
+            position: relative;
+        }
+        
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f5f5f7;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #86868b;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #6e6e73;
+        }
+
+        table {
+            width: 100%;
+            min-width: 3000px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f5f5f7;
+            border-bottom: 2px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            color: #86868b;
+            white-space: nowrap;
+            background: #f5f5f7;
+            min-width: 120px;
+        }
+        
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 101;
+            background: #f5f5f7;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e7;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f7;
+        }
+
+        td {
+            padding: 14px 10px;
+            vertical-align: top;
+            color: #1d1d1f;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+            min-width: 120px;
+        }
+        
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 50;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover td:first-child {
+            background: #f5f5f7;
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .percentage.high {
+            background: #d1f2eb;
+            color: #00684a;
+        }
+
+        .percentage.medium {
+            background: #fff4e6;
+            color: #b95000;
+        }
+
+        .percentage.low {
+            background: #ffe5e5;
+            color: #bf2600;
+        }
+
+        .website-link {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .website-link:hover {
+            color: #0051d5;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px 16px;
+                max-width: 95%;
+                border-radius: 16px;
+            }
+
+            .modal h2 {
+                font-size: 24px;
+            }
+
+            .modal p {
+                font-size: 14px;
+            }
+
+            .flag-large {
+                font-size: 60px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .country-flag {
+                font-size: 80px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header .subtitle {
+                font-size: 16px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                border-radius: 12px;
+                max-height: calc(100vh - 200px);
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-wrapper::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 2800px;
+            }
+
+            th {
+                padding: 10px 6px;
+                font-size: 10px;
+                min-width: 100px;
+            }
+            
+            td {
+                padding: 10px 6px;
+                font-size: 11px;
+                min-width: 100px;
+                max-width: 150px;
+            }
+            
+            td:first-child {
+                min-width: 140px;
+                max-width: 180px;
+            }
+
+            .university-name {
+                font-size: 13px;
+            }
+
+            .price {
+                font-size: 12px;
+            }
+            
+            th:first-child {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div class="overlay" id="registrationOverlay">
+        <div class="modal">
+            <span class="flag-large">🇨🇳</span>
+            <h2>Регистрация на консультацию</h2>
+            <p>Заполните форму, и мы отправим вам код доступа в Instagram DM</p>
+            
+            <form id="registrationForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="regName">Ваше имя *</label>
+                    <input type="text" id="regName" name="name" required placeholder="Мадияр Бегенов">
+                </div>
+                <div class="form-group">
+                    <label for="regMessage">Расскажите о себе (страна, специальность, бюджет) *</label>
+                    <textarea id="regMessage" name="message" required placeholder="Хочу поступить на программу бакалавриата по бизнесу. Бюджет до $15,000 в год."></textarea>
+                </div>
+                <button type="submit" class="btn" id="regSubmitBtn">Отправить заявку</button>
+                <div class="success-message" id="regSuccessMessage">✅ Заявка отправлена! Проверьте Instagram DM для получения кода доступа.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно ввода кода -->
+    <div class="overlay hidden" id="codeOverlay">
+        <div class="modal">
+            <span class="flag-large">🇨🇳</span>
+            <h2>Введите кодовое слово</h2>
+            <p>Введите кодовое слово, которое мы отправили вам в Instagram DM</p>
+            
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" class="code-input" id="codeInput" placeholder="Введите слово" autocomplete="off">
+                </div>
+                <button type="submit" class="btn" id="codeSubmitBtn">Открыть таблицу</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegistration()">Вернуться к регистрации</button>
+                <div class="error-message" id="codeErrorMessage">❌ Неверное кодовое слово. Проверьте Instagram DM и попробуйте еще раз.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px; line-height: 1;">🇨🇳</div>
+            <h1>Университеты Китай</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Университет</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                        <th>Стоимость<br>обучения</th>
+                        <th>Процент<br>поступления</th>
+                        <th>Макс. фин.<br>помощь</th>
+                        <th>Полный<br>грант?</th>
+                        <th>Дедлайн<br>ранней</th>
+                        <th>Дедлайн<br>основной</th>
+                        <th>TOEFL/<br>IELTS/<br>Duolingo</th>
+                        <th>SAT</th>
+                        <th>Эссе</th>
+                        <th>Рекомендательные<br>письма</th>
+                        <th>Стоимость<br>заявки</th>
+                        <th>Ссылка на<br>заявку</th>
+                        <th>Сайт<br>университета</th>
+                        <th>Сайт<br>фин. помощи</th>
+                        <th>Рейтинг<br>по стране</th>
+                        <th>Рейтинг<br>в мире</th>
+                        <th>Профессии</th>
+                        <th>Доп.<br>комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="university-name">Tsinghua University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage low">15%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.tsinghua.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.tsinghua.edu.cn" target="_blank" class="website-link">tsinghua.edu.cn</a></td>
+                        <td><a href="https://www.tsinghua.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Лучший технический вуз Китая, сильнейший в инженерии и IT</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Peking University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$4,800</td>
+                        <td><span class="percentage low">18%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 6</td>
+                        <td>Не требуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.pku.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pku.edu.cn" target="_blank" class="website-link">pku.edu.cn</a></td>
+                        <td><a href="https://www.pku.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Лучший гуманитарный вуз, сильнейший в бизнесе и праве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Fudan University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Шанхай</td>
+                        <td class="price">$4,200</td>
+                        <td><span class="percentage low">25%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.fudan.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.fudan.edu.cn" target="_blank" class="website-link">fudan.edu.cn</a></td>
+                        <td><a href="https://www.fudan.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Медицина, Бизнес, Экономика</td>
+                        <td>Элитный вуз Шанхая, сильный в медицине и экономике</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Shanghai Jiao Tong University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Шанхай</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage medium">30%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sjtu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sjtu.edu.cn" target="_blank" class="website-link">sjtu.edu.cn</a></td>
+                        <td><a href="https://www.sjtu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Сильнейший в инженерии и бизнесе, отличные связи с компаниями</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Zhejiang University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Ханчжоу</td>
+                        <td class="price">$3,800</td>
+                        <td><span class="percentage medium">35%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>3 письма</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.zju.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.zju.edu.cn" target="_blank" class="website-link">zju.edu.cn</a></td>
+                        <td><a href="https://www.zju.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Различные</td>
+                        <td>Крупный исследовательский вуз, сильный в науках и технологиях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Nanjing University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Нанкин</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nju.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nju.edu.cn" target="_blank" class="website-link">nju.edu.cn</a></td>
+                        <td><a href="https://www.nju.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>30-50</td>
+                        <td>800-1000</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Старинный вуз, сильный в гуманитарных и естественных науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Science and Technology of China</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Хэфэй</td>
+                        <td class="price">$3,600</td>
+                        <td><span class="percentage medium">38%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ustc.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ustc.edu.cn" target="_blank" class="website-link">ustc.edu.cn</a></td>
+                        <td><a href="https://www.ustc.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Лучший в физике и математике, элитный технический вуз</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sun Yat-sen University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Гуанчжоу</td>
+                        <td class="price">$3,400</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sysu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sysu.edu.cn" target="_blank" class="website-link">sysu.edu.cn</a></td>
+                        <td><a href="https://www.sysu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика</td>
+                        <td>Сильный в медицине и бизнесе, хорошие возможности для стажировок</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Tongji University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Шанхай</td>
+                        <td class="price">$3,200</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$1,200</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.tongji.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.tongji.edu.cn" target="_blank" class="website-link">tongji.edu.cn</a></td>
+                        <td><a href="https://www.tongji.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>5-15</td>
+                        <td>200-400</td>
+                        <td>Инженерия</td>
+                        <td>Лучший в архитектуре и инженерии, сильные связи с Европой</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Xiamen University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Сямынь</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$1,000</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.xmu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.xmu.edu.cn" target="_blank" class="website-link">xmu.edu.cn</a></td>
+                        <td><a href="https://www.xmu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Красивый кампус у моря, сильный в экономике и менеджменте</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Beijing Normal University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$3,100</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$1,200</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.bnu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bnu.edu.cn" target="_blank" class="website-link">bnu.edu.cn</a></td>
+                        <td><a href="https://www.bnu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Педагогика</td>
+                        <td>Лучший педагогический вуз, сильный в психологии и образовании</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Wuhan University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Ухань</td>
+                        <td class="price">$2,800</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$1,000</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.whu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.whu.edu.cn" target="_blank" class="website-link">whu.edu.cn</a></td>
+                        <td><a href="https://www.whu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Крупный вуз, сильный в медицине и инженерии, доступная стоимость</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sichuan University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чэнду</td>
+                        <td class="price">$2,600</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$800</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.scu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.scu.edu.cn" target="_blank" class="website-link">scu.edu.cn</a></td>
+                        <td><a href="https://www.scu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина</td>
+                        <td>Крупный вуз, сильный в медицине, доступная жизнь в городе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Harbin Institute of Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Харбин</td>
+                        <td class="price">$2,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$1,000</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hit.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hit.edu.cn" target="_blank" class="website-link">hit.edu.cn</a></td>
+                        <td><a href="https://www.hit.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильнейший в аэрокосмической инженерии, доступная стоимость</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Xi'an Jiaotong University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Сиань</td>
+                        <td class="price">$2,700</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$900</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.xjtu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.xjtu.edu.cn" target="_blank" class="website-link">xjtu.edu.cn</a></td>
+                        <td><a href="https://www.xjtu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Сильный технический вуз, доступная жизнь в историческом городе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Beijing Institute of Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$3,200</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.bit.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bit.edu.cn" target="_blank" class="website-link">bit.edu.cn</a></td>
+                        <td><a href="https://www.bit.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Элитный технический вуз. Сильнейший в инженерии, IT, оборонных технологиях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Beihang University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.buaa.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.buaa.edu.cn" target="_blank" class="website-link">buaa.edu.cn</a></td>
+                        <td><a href="https://www.buaa.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильнейший в аэрокосмической инженерии. Топовый технический вуз.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Renmin University of China</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$3,400</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$1,800</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 6</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ruc.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ruc.edu.cn" target="_blank" class="website-link">ruc.edu.cn</a></td>
+                        <td><a href="https://www.ruc.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>5-15</td>
+                        <td>200-400</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Лучший в гуманитариях и социальных науках. Сильнейший в экономике, праве.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Tianjin University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Тяньцзинь</td>
+                        <td class="price">$3,300</td>
+                        <td><span class="percentage medium">44%</span></td>
+                        <td class="price">$1,700</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.tju.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.tju.edu.cn" target="_blank" class="website-link">tju.edu.cn</a></td>
+                        <td><a href="https://www.tju.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>30-50</td>
+                        <td>800-1000</td>
+                        <td>Инженерия</td>
+                        <td>Старинный вуз (1895). Сильнейший в инженерии, архитектуре.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Dalian University of Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Далянь</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.dlut.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dlut.edu.cn" target="_blank" class="website-link">dlut.edu.cn</a></td>
+                        <td><a href="https://www.dlut.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Сильный технический вуз. Сильнейший в морской инженерии, IT.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Northeastern University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Шэньян</td>
+                        <td class="price">$2,800</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$1,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.neu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.neu.edu.cn" target="_blank" class="website-link">neu.edu.cn</a></td>
+                        <td><a href="https://www.neu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильный технический вуз. Сильный в инженерии, металлургии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Jilin University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чанчунь</td>
+                        <td class="price">$2,600</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$1,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.jlu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.jlu.edu.cn" target="_blank" class="website-link">jlu.edu.cn</a></td>
+                        <td><a href="https://www.jlu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Крупный вуз. Сильный в медицине, науках, инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Harbin Engineering University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Харбин</td>
+                        <td class="price">$2,400</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$1,200</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hrbeu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hrbeu.edu.cn" target="_blank" class="website-link">hrbeu.edu.cn</a></td>
+                        <td><a href="https://www.hrbeu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильный в морской инженерии, оборонных технологиях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Shandong University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Цзинань</td>
+                        <td class="price">$2,700</td>
+                        <td><span class="percentage high">53%</span></td>
+                        <td class="price">$1,350</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sdu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sdu.edu.cn" target="_blank" class="website-link">sdu.edu.cn</a></td>
+                        <td><a href="https://www.sdu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Крупный вуз. Сильный в медицине, науках, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ocean University of China</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Циндао</td>
+                        <td class="price">$2,500</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$1,250</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouc.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ouc.edu.cn" target="_blank" class="website-link">ouc.edu.cn</a></td>
+                        <td><a href="https://www.ouc.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Сильнейший в морских науках, океанологии, рыболовстве.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">China University of Petroleum</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Циндао/Пекин</td>
+                        <td class="price">$2,800</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$1,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.upc.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.upc.edu.cn" target="_blank" class="website-link">upc.edu.cn</a></td>
+                        <td><a href="https://www.upc.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильнейший в нефтегазовой инженерии, энергетике.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Central South University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чанша</td>
+                        <td class="price">$2,900</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$1,450</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.csu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.csu.edu.cn" target="_blank" class="website-link">csu.edu.cn</a></td>
+                        <td><a href="https://www.csu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Сильный технический вуз. Сильный в металлургии, медицине, инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hunan University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чанша</td>
+                        <td class="price">$2,700</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$1,350</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hnu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hnu.edu.cn" target="_blank" class="website-link">hnu.edu.cn</a></td>
+                        <td><a href="https://www.hnu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, Гуманитарные науки</td>
+                        <td>Сильный в инженерии, архитектуре, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Wuhan University of Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Ухань</td>
+                        <td class="price">$2,600</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$1,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.whut.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.whut.edu.cn" target="_blank" class="website-link">whut.edu.cn</a></td>
+                        <td><a href="https://www.whut.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Сильный технический вуз. Сильный в инженерии, IT, материаловедении.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Huazhong University of Science and Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Ухань</td>
+                        <td class="price">$3,100</td>
+                        <td><span class="percentage medium">46%</span></td>
+                        <td class="price">$1,600</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hust.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hust.edu.cn" target="_blank" class="website-link">hust.edu.cn</a></td>
+                        <td><a href="https://www.hust.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия, IT, Компьютерные науки</td>
+                        <td>Топовый технический вуз. Сильнейший в инженерии, медицине, IT.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">South China University of Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Гуанчжоу</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.scut.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.scut.edu.cn" target="_blank" class="website-link">scut.edu.cn</a></td>
+                        <td><a href="https://www.scut.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Сильный технический вуз. Сильный в инженерии, IT, материаловедении.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Chongqing University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чунцин</td>
+                        <td class="price">$2,800</td>
+                        <td><span class="percentage high">51%</span></td>
+                        <td class="price">$1,400</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cqu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cqu.edu.cn" target="_blank" class="website-link">cqu.edu.cn</a></td>
+                        <td><a href="https://www.cqu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Крупный вуз. Сильный в инженерии, науках, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Southwest Jiaotong University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чэнду</td>
+                        <td class="price">$2,600</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$1,300</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.swjtu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.swjtu.edu.cn" target="_blank" class="website-link">swjtu.edu.cn</a></td>
+                        <td><a href="https://www.swjtu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильнейший в транспортной инженерии, железнодорожных технологиях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Electronic Science and Technology</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Чэнду</td>
+                        <td class="price">$2,900</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$1,450</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uestc.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uestc.edu.cn" target="_blank" class="website-link">uestc.edu.cn</a></td>
+                        <td><a href="https://www.uestc.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Сильнейший в электронике, IT, телекоммуникациях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Xidian University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Сиань</td>
+                        <td class="price">$2,700</td>
+                        <td><span class="percentage high">53%</span></td>
+                        <td class="price">$1,350</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.xidian.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.xidian.edu.cn" target="_blank" class="website-link">xidian.edu.cn</a></td>
+                        <td><a href="https://www.xidian.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Сильнейший в электронике, IT, радиотехнике.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Northwestern Polytechnical University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Сиань</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage medium">49%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nwpu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nwpu.edu.cn" target="_blank" class="website-link">nwpu.edu.cn</a></td>
+                        <td><a href="https://www.nwpu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильнейший в аэрокосмической инженерии, оборонных технологиях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Lanzhou University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Ланьчжоу</td>
+                        <td class="price">$2,400</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$1,200</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.lzu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.lzu.edu.cn" target="_blank" class="website-link">lzu.edu.cn</a></td>
+                        <td><a href="https://www.lzu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Крупный вуз. Сильный в науках, медицине, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Xinjiang University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Урумчи</td>
+                        <td class="price">$2,200</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$1,100</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.xju.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.xju.edu.cn" target="_blank" class="website-link">xju.edu.cn</a></td>
+                        <td><a href="https://www.xju.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Вуз Синьцзяна. Сильный в науках, гуманитариях, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Inner Mongolia University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Хух-Хото</td>
+                        <td class="price">$2,100</td>
+                        <td><span class="percentage high">64%</span></td>
+                        <td class="price">$1,050</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.imu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.imu.edu.cn" target="_blank" class="website-link">imu.edu.cn</a></td>
+                        <td><a href="https://www.imu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Вуз Внутренней Монголии. Сильный в науках, гуманитариях, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yunnan University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Куньмин</td>
+                        <td class="price">$2,300</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$1,150</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ynu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ynu.edu.cn" target="_blank" class="website-link">ynu.edu.cn</a></td>
+                        <td><a href="https://www.ynu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Вуз Юньнани. Сильный в науках, гуманитариях, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Guizhou University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Гуйян</td>
+                        <td class="price">$2,200</td>
+                        <td><span class="percentage high">63%</span></td>
+                        <td class="price">$1,100</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gzu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gzu.edu.cn" target="_blank" class="website-link">gzu.edu.cn</a></td>
+                        <td><a href="https://www.gzu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Гуйчжоу. Сильный в науках, инженерии, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hainan University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Хайкоу</td>
+                        <td class="price">$2,400</td>
+                        <td><span class="percentage high">61%</span></td>
+                        <td class="price">$1,200</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hainanu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hainanu.edu.cn" target="_blank" class="website-link">hainanu.edu.cn</a></td>
+                        <td><a href="https://www.hainanu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Вуз Хайнаня. Сильный в науках, туризме, сельском хозяйстве.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Tibet University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Лхаса</td>
+                        <td class="price">$2,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$1,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.utibet.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utibet.edu.cn" target="_blank" class="website-link">utibet.edu.cn</a></td>
+                        <td><a href="https://www.utibet.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Вуз Тибета. Сильный в науках, гуманитариях, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ningxia University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Иньчуань</td>
+                        <td class="price">$2,100</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$1,050</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nxu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nxu.edu.cn" target="_blank" class="website-link">nxu.edu.cn</a></td>
+                        <td><a href="https://www.nxu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Вуз Нинся. Сильный в науках, гуманитариях, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Qinghai University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Синин</td>
+                        <td class="price">$2,000</td>
+                        <td><span class="percentage high">67%</span></td>
+                        <td class="price">$1,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.qhu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.qhu.edu.cn" target="_blank" class="website-link">qhu.edu.cn</a></td>
+                        <td><a href="https://www.qhu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Вуз Цинхая. Сильный в науках, гуманитариях, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Nankai University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Тяньцзинь</td>
+                        <td class="price">$3,200</td>
+                        <td><span class="percentage medium">47%</span></td>
+                        <td class="price">$1,600</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 6</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nankai.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nankai.edu.cn" target="_blank" class="website-link">nankai.edu.cn</a></td>
+                        <td><a href="https://www.nankai.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Элитный вуз. Сильнейший в экономике, бизнесе, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Tianjin Medical University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Тяньцзинь</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage medium">43%</span></td>
+                        <td class="price">$1,800</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.tmu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.tmu.edu.cn" target="_blank" class="website-link">tmu.edu.cn</a></td>
+                        <td><a href="https://www.tmu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Сильнейший в медицине. Топовый медицинский вуз.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Capital Medical University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Пекин</td>
+                        <td class="price">$3,800</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ccmu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ccmu.edu.cn" target="_blank" class="website-link">ccmu.edu.cn</a></td>
+                        <td><a href="https://www.ccmu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Топовый медицинский вуз. Сильнейший в медицине, стоматологии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">China Medical University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Шэньян</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cmu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cmu.edu.cn" target="_blank" class="website-link">cmu.edu.cn</a></td>
+                        <td><a href="https://www.cmu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Топовый медицинский вуз. Сильнейший в медицине, стоматологии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Second Military Medical University</div>
+                        </td>
+                        <td>Китай</td>
+                        <td>Шанхай</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage medium">35%</span></td>
+                        <td class="price">$2,200</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>HSK 5+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.smmu.edu.cn" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.smmu.edu.cn" target="_blank" class="website-link">smmu.edu.cn</a></td>
+                        <td><a href="https://www.smmu.edu.cn" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Медицина</td>
+                        <td>Элитный военный медицинский вуз. Сильнейший в медицине.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Кодовое слово для Китай (будет отправлено в Instagram DM после регистрации)
+        const COUNTRY_CODE = 'ВЕЛИКАЯСТЕНА';
+        const COUNTRY_NAME = 'Китай';
+        const STORAGE_KEY = 'china_authenticated';
+
+        // Проверяем, был ли пользователь уже авторизован
+        if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+            document.getElementById('registrationOverlay').classList.add('hidden');
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const name = form.regName.value;
+            const message = form.regMessage.value;
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30, 20, 30]);
+            }
+            
+            // Формируем сообщение для WhatsApp
+            const whatsappMessage = `Здравствуйте! Хочу зарегистрироваться на бесплатную консультацию по поступлению в университеты.\n\nИмя: ${name}\n\n${message ? 'О себе: ' + message : ''}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Открываем WhatsApp
+            window.open(`https://wa.me/77773133500?text=${encodedMessage}`, '_blank');
+            
+            // Показываем сообщение об успехе
+            document.getElementById('regSuccessMessage').style.display = 'block';
+            form.reset();
+            
+            // Через 2 секунды переходим к вводу кода
+            setTimeout(() => {
+                document.getElementById('registrationOverlay').classList.add('hidden');
+                document.getElementById('codeOverlay').classList.remove('hidden');
+                document.getElementById('codeInput').focus();
+            }, 2000);
+        }
+
+        function handleCodeSubmit(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('codeInput');
+            const error = document.getElementById('codeErrorMessage');
+            const codeOverlay = document.getElementById('codeOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+
+            const inputValue = input.value.toUpperCase().trim();
+            if (inputValue === COUNTRY_CODE.toUpperCase()) {
+                // Правильное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50]);
+                }
+                codeOverlay.classList.add('hidden');
+                mainContent.style.display = 'block';
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } else {
+                // Неверное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#bf2600';
+                setTimeout(() => {
+                    input.style.borderColor = '#d2d2d7';
+                }, 1000);
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('registrationOverlay').classList.remove('hidden');
+        }
+
+        // Автоматическая проверка при вводе 4 цифр
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                codeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleCodeSubmit(e);
+                    }
+                });
+            }
+
+            // Эффекты для всех кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

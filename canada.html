@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты Канада</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .modal p {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .flag-large {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f5f5f7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .code-input {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 500;
+            padding: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:hover {
+            background: #0051d5;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e7;
+        }
+
+        .error-message {
+            color: #bf2600;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message {
+            color: #00684a;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .country-flag {
+            font-size: 120px;
+            margin-bottom: 24px;
+            display: block;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 300px);
+            position: relative;
+        }
+        
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f5f5f7;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #86868b;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #6e6e73;
+        }
+
+        table {
+            width: 100%;
+            min-width: 3000px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f5f5f7;
+            border-bottom: 2px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            color: #86868b;
+            white-space: nowrap;
+            background: #f5f5f7;
+            min-width: 120px;
+        }
+        
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 101;
+            background: #f5f5f7;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e7;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f7;
+        }
+
+        td {
+            padding: 14px 10px;
+            vertical-align: top;
+            color: #1d1d1f;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+            min-width: 120px;
+        }
+        
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 50;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover td:first-child {
+            background: #f5f5f7;
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .percentage.high {
+            background: #d1f2eb;
+            color: #00684a;
+        }
+
+        .percentage.medium {
+            background: #fff4e6;
+            color: #b95000;
+        }
+
+        .percentage.low {
+            background: #ffe5e5;
+            color: #bf2600;
+        }
+
+        .website-link {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .website-link:hover {
+            color: #0051d5;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px 16px;
+                max-width: 95%;
+                border-radius: 16px;
+            }
+
+            .modal h2 {
+                font-size: 24px;
+            }
+
+            .modal p {
+                font-size: 14px;
+            }
+
+            .flag-large {
+                font-size: 60px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .country-flag {
+                font-size: 80px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header .subtitle {
+                font-size: 16px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                border-radius: 12px;
+                max-height: calc(100vh - 200px);
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-wrapper::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 2800px;
+            }
+
+            th {
+                padding: 10px 6px;
+                font-size: 10px;
+                min-width: 100px;
+            }
+            
+            td {
+                padding: 10px 6px;
+                font-size: 11px;
+                min-width: 100px;
+                max-width: 150px;
+            }
+            
+            td:first-child {
+                min-width: 140px;
+                max-width: 180px;
+            }
+
+            .university-name {
+                font-size: 13px;
+            }
+
+            .price {
+                font-size: 12px;
+            }
+            
+            th:first-child {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div class="overlay" id="registrationOverlay">
+        <div class="modal">
+            <span class="flag-large">🇨🇦</span>
+            <h2>Регистрация на консультацию</h2>
+            <p>Заполните форму, и мы отправим вам код доступа в Instagram DM</p>
+            
+            <form id="registrationForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="regName">Ваше имя *</label>
+                    <input type="text" id="regName" name="name" required placeholder="Мадияр Бегенов">
+                </div>
+                <div class="form-group">
+                    <label for="regMessage">Расскажите о себе (страна, специальность, бюджет) *</label>
+                    <textarea id="regMessage" name="message" required placeholder="Хочу поступить на программу бакалавриата по бизнесу. Бюджет до $15,000 в год."></textarea>
+                </div>
+                <button type="submit" class="btn" id="regSubmitBtn">Отправить заявку</button>
+                <div class="success-message" id="regSuccessMessage">✅ Заявка отправлена! Проверьте Instagram DM для получения кода доступа.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно ввода кода -->
+    <div class="overlay hidden" id="codeOverlay">
+        <div class="modal">
+            <span class="flag-large">🇨🇦</span>
+            <h2>Введите кодовое слово</h2>
+            <p>Введите кодовое слово, которое мы отправили вам в Instagram DM</p>
+            
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" class="code-input" id="codeInput" placeholder="Введите слово" autocomplete="off">
+                </div>
+                <button type="submit" class="btn" id="codeSubmitBtn">Открыть таблицу</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegistration()">Вернуться к регистрации</button>
+                <div class="error-message" id="codeErrorMessage">❌ Неверное кодовое слово. Проверьте Instagram DM и попробуйте еще раз.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px; line-height: 1;">🇨🇦</div>
+            <h1>Университеты Канада</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Университет</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                        <th>Стоимость<br>обучения</th>
+                        <th>Процент<br>поступления</th>
+                        <th>Макс. фин.<br>помощь</th>
+                        <th>Полный<br>грант?</th>
+                        <th>Дедлайн<br>ранней</th>
+                        <th>Дедлайн<br>основной</th>
+                        <th>TOEFL/<br>IELTS/<br>Duolingo</th>
+                        <th>SAT</th>
+                        <th>Эссе</th>
+                        <th>Рекомендательные<br>письма</th>
+                        <th>Стоимость<br>заявки</th>
+                        <th>Ссылка на<br>заявку</th>
+                        <th>Сайт<br>университета</th>
+                        <th>Сайт<br>фин. помощи</th>
+                        <th>Рейтинг<br>по стране</th>
+                        <th>Рейтинг<br>в мире</th>
+                        <th>Профессии</th>
+                        <th>Доп.<br>комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Toronto</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Торонто</td>
+                        <td class="price">$45,000</td>
+                        <td><span class="percentage medium">43%</span></td>
+                        <td class="price">$30,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utoronto.ca" target="_blank" class="website-link">utoronto.ca</a></td>
+                        <td><a href="https://www.utoronto.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Топ-1 вуз Канады, сильнейший в исследованиях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of British Columbia</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Ванкувер</td>
+                        <td class="price">$42,000</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$28,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ubc.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ubc.ca" target="_blank" class="website-link">ubc.ca</a></td>
+                        <td><a href="https://www.ubc.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>2-10</td>
+                        <td>100-200</td>
+                        <td>Различные</td>
+                        <td>Топ-2 вуз Канады, красивый кампус</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">McGill University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Монреаль</td>
+                        <td class="price">$30,000</td>
+                        <td><span class="percentage medium">46%</span></td>
+                        <td class="price">$20,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mcgill.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mcgill.ca" target="_blank" class="website-link">mcgill.ca</a></td>
+                        <td><a href="https://www.mcgill.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Медицина</td>
+                        <td>Элитный вуз, сильнейший в медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Alberta</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Эдмонтон</td>
+                        <td class="price">$25,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$15,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ualberta.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ualberta.ca" target="_blank" class="website-link">ualberta.ca</a></td>
+                        <td><a href="https://www.ualberta.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Сильный в инженерии и науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">McMaster University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Гамильтон</td>
+                        <td class="price">$35,000</td>
+                        <td><span class="percentage high">59%</span></td>
+                        <td class="price">$20,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mcmaster.ca" target="_blank" class="website-link">mcmaster.ca</a></td>
+                        <td><a href="https://www.mcmaster.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Сильнейший в медицине, хорошие программы</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Waterloo</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Ватерлоо</td>
+                        <td class="price">$40,000</td>
+                        <td><span class="percentage high">53%</span></td>
+                        <td class="price">$25,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uwaterloo.ca" target="_blank" class="website-link">uwaterloo.ca</a></td>
+                        <td><a href="https://www.uwaterloo.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Сильнейший в IT и инженерии, кооперативные программы</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Western University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Лондон, ON</td>
+                        <td class="price">$38,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$22,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uwo.ca" target="_blank" class="website-link">uwo.ca</a></td>
+                        <td><a href="https://www.uwo.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика</td>
+                        <td>Сильный в бизнесе и медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Queen's University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Кингстон</td>
+                        <td class="price">$36,000</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$20,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.queensu.ca" target="_blank" class="website-link">queensu.ca</a></td>
+                        <td><a href="https://www.queensu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Элитный вуз, сильный в бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Calgary</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Калгари</td>
+                        <td class="price">$28,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$15,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ucalgary.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ucalgary.ca" target="_blank" class="website-link">ucalgary.ca</a></td>
+                        <td><a href="https://www.ucalgary.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Сильный в инженерии и бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Simon Fraser University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Бернаби</td>
+                        <td class="price">$30,000</td>
+                        <td><span class="percentage high">63%</span></td>
+                        <td class="price">$18,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sfu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sfu.ca" target="_blank" class="website-link">sfu.ca</a></td>
+                        <td><a href="https://www.sfu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Современный вуз, сильный в бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Ottawa</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Оттава</td>
+                        <td class="price">$32,000</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$20,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uottawa.ca" target="_blank" class="website-link">uottawa.ca</a></td>
+                        <td><a href="https://www.uottawa.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Двуязычный вуз, сильный в праве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Dalhousie University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Галифакс</td>
+                        <td class="price">$22,000</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$12,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.dal.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dal.ca" target="_blank" class="website-link">dal.ca</a></td>
+                        <td><a href="https://www.dal.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Сильный в медицине и океанологии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Victoria</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Виктория</td>
+                        <td class="price">$25,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$15,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uvic.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uvic.ca" target="_blank" class="website-link">uvic.ca</a></td>
+                        <td><a href="https://www.uvic.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Красивый кампус, сильный в науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Carleton University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Оттава</td>
+                        <td class="price">$28,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$15,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.carleton.ca" target="_blank" class="website-link">carleton.ca</a></td>
+                        <td><a href="https://www.carleton.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Политология, Международные отношения</td>
+                        <td>Сильный в журналистике и политологии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Concordia University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Монреаль</td>
+                        <td class="price">$24,000</td>
+                        <td><span class="percentage high">75%</span></td>
+                        <td class="price">$12,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.concordia.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.concordia.ca" target="_blank" class="website-link">concordia.ca</a></td>
+                        <td><a href="https://www.concordia.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Доступный вуз, сильный в бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Manitoba</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Виннипег</td>
+                        <td class="price">$20,000</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$10,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umanitoba.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umanitoba.ca" target="_blank" class="website-link">umanitoba.ca</a></td>
+                        <td><a href="https://www.umanitoba.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Крупный вуз. Сильный в медицине, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Saskatchewan</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Саскатун</td>
+                        <td class="price">$22,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$11,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.usask.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.usask.ca" target="_blank" class="website-link">usask.ca</a></td>
+                        <td><a href="https://www.usask.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Вуз Саскачевана. Сильный в сельском хозяйстве, науках, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of New Brunswick</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Фредериктон/Сент-Джон</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unb.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unb.ca" target="_blank" class="website-link">unb.ca</a></td>
+                        <td><a href="https://www.unb.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>30-50</td>
+                        <td>800-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Старинный вуз (1785). Сильный в инженерии, науках, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Memorial University of Newfoundland</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Сент-Джонс</td>
+                        <td class="price">$12,000</td>
+                        <td><span class="percentage high">78%</span></td>
+                        <td class="price">$6,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mun.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mun.ca" target="_blank" class="website-link">mun.ca</a></td>
+                        <td><a href="https://www.mun.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Самый доступный вуз. Сильный в морских науках, инженерии, медицине</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Prince Edward Island</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Шарлоттаун</td>
+                        <td class="price">$15,000</td>
+                        <td><span class="percentage high">75%</span></td>
+                        <td class="price">$7,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.upei.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.upei.ca" target="_blank" class="website-link">upei.ca</a></td>
+                        <td><a href="https://www.upei.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Ветеринария</td>
+                        <td>Вуз Острова Принца Эдуарда. Сильный в ветеринарии, науках, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Acadia University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Вулфвилл</td>
+                        <td class="price">$19,000</td>
+                        <td><span class="percentage high">73%</span></td>
+                        <td class="price">$9,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.acadiau.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.acadiau.ca" target="_blank" class="website-link">acadiau.ca</a></td>
+                        <td><a href="https://www.acadiau.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Небольшой вуз. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Mount Allison University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Саквилл</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">74%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mta.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mta.ca" target="_blank" class="website-link">mta.ca</a></td>
+                        <td><a href="https://www.mta.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Небольшой вуз. Сильный в гуманитариях, науках, искусстве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">St. Francis Xavier University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Антигониш</td>
+                        <td class="price">$17,000</td>
+                        <td><span class="percentage high">76%</span></td>
+                        <td class="price">$8,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.stfx.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.stfx.ca" target="_blank" class="website-link">stfx.ca</a></td>
+                        <td><a href="https://www.stfx.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Небольшой вуз. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Lethbridge</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Летбридж</td>
+                        <td class="price">$16,000</td>
+                        <td><span class="percentage high">77%</span></td>
+                        <td class="price">$8,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uleth.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uleth.ca" target="_blank" class="website-link">uleth.ca</a></td>
+                        <td><a href="https://www.uleth.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Альберты. Сильный в науках, бизнесе, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Brandon University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Брандон</td>
+                        <td class="price">$14,000</td>
+                        <td><span class="percentage high">79%</span></td>
+                        <td class="price">$7,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.brandonu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.brandonu.ca" target="_blank" class="website-link">brandonu.ca</a></td>
+                        <td><a href="https://www.brandonu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Небольшой вуз. Сильный в образовании, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Regina</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Реджайна</td>
+                        <td class="price">$20,000</td>
+                        <td><span class="percentage high">71%</span></td>
+                        <td class="price">$10,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uregina.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uregina.ca" target="_blank" class="website-link">uregina.ca</a></td>
+                        <td><a href="https://www.uregina.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Вуз Саскачевана. Сильный в бизнесе, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Windsor</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Виндзор</td>
+                        <td class="price">$25,000</td>
+                        <td><span class="percentage high">66%</span></td>
+                        <td class="price">$12,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uwindsor.ca" target="_blank" class="website-link">uwindsor.ca</a></td>
+                        <td><a href="https://www.uwindsor.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Вуз Онтарио. Сильный в инженерии, бизнесе, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Brock University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Сент-Катаринс</td>
+                        <td class="price">$24,000</td>
+                        <td><span class="percentage high">67%</span></td>
+                        <td class="price">$12,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.brocku.ca" target="_blank" class="website-link">brocku.ca</a></td>
+                        <td><a href="https://www.brocku.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Онтарио. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Trent University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Питерборо</td>
+                        <td class="price">$22,000</td>
+                        <td><span class="percentage high">69%</span></td>
+                        <td class="price">$11,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.trentu.ca" target="_blank" class="website-link">trentu.ca</a></td>
+                        <td><a href="https://www.trentu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Вуз Онтарио. Сильный в науках, гуманитариях, экологии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Lakehead University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Тандер-Бей</td>
+                        <td class="price">$20,000</td>
+                        <td><span class="percentage high">71%</span></td>
+                        <td class="price">$10,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.lakeheadu.ca" target="_blank" class="website-link">lakeheadu.ca</a></td>
+                        <td><a href="https://www.lakeheadu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Вуз Онтарио. Сильный в инженерии, науках, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Laurentian University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Садбери</td>
+                        <td class="price">$21,000</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$10,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.laurentian.ca" target="_blank" class="website-link">laurentian.ca</a></td>
+                        <td><a href="https://www.laurentian.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Вуз Онтарио. Сильный в науках, инженерии, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Nipissing University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Норт-Бей</td>
+                        <td class="price">$19,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$9,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nipissingu.ca" target="_blank" class="website-link">nipissingu.ca</a></td>
+                        <td><a href="https://www.nipissingu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Вуз Онтарио. Сильный в образовании, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Ontario Institute of Technology</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Ошава</td>
+                        <td class="price">$23,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$11,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uoit.ca" target="_blank" class="website-link">uoit.ca</a></td>
+                        <td><a href="https://www.uoit.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в IT, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Algoma University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Солт-Сент-Мари</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">73%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.algomau.ca" target="_blank" class="website-link">algomau.ca</a></td>
+                        <td><a href="https://www.algomau.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Небольшой вуз. Сильный в науках, гуманитариях, бизнесе</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Northern British Columbia</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Принс-Джордж</td>
+                        <td class="price">$20,000</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$10,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unbc.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unbc.ca" target="_blank" class="website-link">unbc.ca</a></td>
+                        <td><a href="https://www.unbc.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Британской Колумбии. Сильный в науках, бизнесе, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Thompson Rivers University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Камлупс</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.tru.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.tru.ca" target="_blank" class="website-link">tru.ca</a></td>
+                        <td><a href="https://www.tru.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Вуз Британской Колумбии. Сильный в бизнесе, науках, туризме</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Vancouver Island University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Нанаймо</td>
+                        <td class="price">$17,000</td>
+                        <td><span class="percentage high">74%</span></td>
+                        <td class="price">$8,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.viu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.viu.ca" target="_blank" class="website-link">viu.ca</a></td>
+                        <td><a href="https://www.viu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Вуз Британской Колумбии. Сильный в бизнесе, науках, туризме</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of the Fraser Valley</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Абботсфорд</td>
+                        <td class="price">$16,000</td>
+                        <td><span class="percentage high">75%</span></td>
+                        <td class="price">$8,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ufv.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ufv.ca" target="_blank" class="website-link">ufv.ca</a></td>
+                        <td><a href="https://www.ufv.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Британской Колумбии. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Capilano University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Норт-Ванкувер</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">73%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.capilanou.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.capilanou.ca" target="_blank" class="website-link">capilanou.ca</a></td>
+                        <td><a href="https://www.capilanou.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Вуз Британской Колумбии. Сильный в бизнесе, туризме, искусстве</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kwantlen Polytechnic University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Суррей</td>
+                        <td class="price">$17,000</td>
+                        <td><span class="percentage high">74%</span></td>
+                        <td class="price">$8,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kpu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kpu.ca" target="_blank" class="website-link">kpu.ca</a></td>
+                        <td><a href="https://www.kpu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Политехнический вуз. Сильный в бизнесе, инженерии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Mount Royal University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Калгари</td>
+                        <td class="price">$20,000</td>
+                        <td><span class="percentage high">71%</span></td>
+                        <td class="price">$10,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mtroyal.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mtroyal.ca" target="_blank" class="website-link">mtroyal.ca</a></td>
+                        <td><a href="https://www.mtroyal.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Альберты. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">MacEwan University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Эдмонтон</td>
+                        <td class="price">$19,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$9,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.macewan.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.macewan.ca" target="_blank" class="website-link">macewan.ca</a></td>
+                        <td><a href="https://www.macewan.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Альберты. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of New Brunswick Saint John</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Сент-Джон</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unb.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unb.ca" target="_blank" class="website-link">unb.ca</a></td>
+                        <td><a href="https://www.unb.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Кампус UNB. Сильный в бизнесе, науках, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Cape Breton University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Сидни</td>
+                        <td class="price">$16,000</td>
+                        <td><span class="percentage high">76%</span></td>
+                        <td class="price">$8,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cbu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cbu.ca" target="_blank" class="website-link">cbu.ca</a></td>
+                        <td><a href="https://www.cbu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Новой Шотландии. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Mount Saint Vincent University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Галифакс</td>
+                        <td class="price">$17,000</td>
+                        <td><span class="percentage high">75%</span></td>
+                        <td class="price">$8,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.msvu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.msvu.ca" target="_blank" class="website-link">msvu.ca</a></td>
+                        <td><a href="https://www.msvu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Женский вуз. Сильный в образовании, бизнесе, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">St. Mary's University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Галифакс</td>
+                        <td class="price">$18,000</td>
+                        <td><span class="percentage high">74%</span></td>
+                        <td class="price">$9,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.smu.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.smu.ca" target="_blank" class="website-link">smu.ca</a></td>
+                        <td><a href="https://www.smu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Католический вуз. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Université de Moncton</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Монктон</td>
+                        <td class="price">$15,000</td>
+                        <td><span class="percentage high">77%</span></td>
+                        <td class="price">$7,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>Французский B2+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umoncton.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umoncton.ca" target="_blank" class="website-link">umoncton.ca</a></td>
+                        <td><a href="https://www.umoncton.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Франкоязычный вуз. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Bishop's University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Шербрук</td>
+                        <td class="price">$20,000</td>
+                        <td><span class="percentage high">71%</span></td>
+                        <td class="price">$10,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ubishops.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ubishops.ca" target="_blank" class="website-link">ubishops.ca</a></td>
+                        <td><a href="https://www.ubishops.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Небольшой вуз. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Guelph</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Гвелф</td>
+                        <td class="price">$28,000</td>
+                        <td><span class="percentage high">64%</span></td>
+                        <td class="price">$14,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uoguelph.ca" target="_blank" class="website-link">uoguelph.ca</a></td>
+                        <td><a href="https://www.uoguelph.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Ветеринария</td>
+                        <td>Вуз Онтарио. Сильнейший в сельском хозяйстве, ветеринарии, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Wilfrid Laurier University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Ватерлоо</td>
+                        <td class="price">$26,000</td>
+                        <td><span class="percentage high">66%</span></td>
+                        <td class="price">$13,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.wlu.ca" target="_blank" class="website-link">wlu.ca</a></td>
+                        <td><a href="https://www.wlu.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Вуз Онтарио. Сильный в бизнесе, науках, гуманитариях</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ryerson University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Торонто</td>
+                        <td class="price">$30,000</td>
+                        <td><span class="percentage high">63%</span></td>
+                        <td class="price">$15,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ryerson.ca" target="_blank" class="website-link">ryerson.ca</a></td>
+                        <td><a href="https://www.ryerson.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Вуз Онтарио. Сильный в медиа, бизнесе, инженерии</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">York University</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Торонто</td>
+                        <td class="price">$32,000</td>
+                        <td><span class="percentage high">61%</span></td>
+                        <td class="price">$16,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yorku.ca" target="_blank" class="website-link">yorku.ca</a></td>
+                        <td><a href="https://www.yorku.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Крупный вуз. Сильный в бизнесе, гуманитариях, науках</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Ontario Institute of Technology</div>
+                        </td>
+                        <td>Канада</td>
+                        <td>Ошава</td>
+                        <td class="price">$23,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$11,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 90+ или IELTS 6.5+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ouac.on.ca" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uoit.ca" target="_blank" class="website-link">uoit.ca</a></td>
+                        <td><a href="https://www.uoit.ca/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в IT, инженерии, науках</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Кодовое слово для Канада (будет отправлено в Instagram DM после регистрации)
+        const COUNTRY_CODE = 'НИАГАРА';
+        const COUNTRY_NAME = 'Канада';
+        const STORAGE_KEY = 'canada_authenticated';
+
+        // Проверяем, был ли пользователь уже авторизован
+        if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+            document.getElementById('registrationOverlay').classList.add('hidden');
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const name = form.regName.value;
+            const message = form.regMessage.value;
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30, 20, 30]);
+            }
+            
+            // Формируем сообщение для WhatsApp
+            const whatsappMessage = `Здравствуйте! Хочу зарегистрироваться на бесплатную консультацию по поступлению в университеты.\n\nИмя: ${name}\n\n${message ? 'О себе: ' + message : ''}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Открываем WhatsApp
+            window.open(`https://wa.me/77773133500?text=${encodedMessage}`, '_blank');
+            
+            // Показываем сообщение об успехе
+            document.getElementById('regSuccessMessage').style.display = 'block';
+            form.reset();
+            
+            // Через 2 секунды переходим к вводу кода
+            setTimeout(() => {
+                document.getElementById('registrationOverlay').classList.add('hidden');
+                document.getElementById('codeOverlay').classList.remove('hidden');
+                document.getElementById('codeInput').focus();
+            }, 2000);
+        }
+
+        function handleCodeSubmit(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('codeInput');
+            const error = document.getElementById('codeErrorMessage');
+            const codeOverlay = document.getElementById('codeOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+
+            const inputValue = input.value.toUpperCase().trim();
+            if (inputValue === COUNTRY_CODE.toUpperCase()) {
+                // Правильное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50]);
+                }
+                codeOverlay.classList.add('hidden');
+                mainContent.style.display = 'block';
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } else {
+                // Неверное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#bf2600';
+                setTimeout(() => {
+                    input.style.borderColor = '#d2d2d7';
+                }, 1000);
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('registrationOverlay').classList.remove('hidden');
+        }
+
+        // Автоматическая проверка при вводе 4 цифр
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                codeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleCodeSubmit(e);
+                    }
+                });
+            }
+
+            // Эффекты для всех кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты Малайзия</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .modal p {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .flag-large {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f5f5f7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .code-input {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 500;
+            padding: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:hover {
+            background: #0051d5;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e7;
+        }
+
+        .error-message {
+            color: #bf2600;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message {
+            color: #00684a;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .country-flag {
+            font-size: 120px;
+            margin-bottom: 24px;
+            display: block;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 300px);
+            position: relative;
+        }
+        
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f5f5f7;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #86868b;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #6e6e73;
+        }
+
+        table {
+            width: 100%;
+            min-width: 3000px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f5f5f7;
+            border-bottom: 2px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            color: #86868b;
+            white-space: nowrap;
+            background: #f5f5f7;
+            min-width: 120px;
+        }
+        
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 101;
+            background: #f5f5f7;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e7;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f7;
+        }
+
+        td {
+            padding: 14px 10px;
+            vertical-align: top;
+            color: #1d1d1f;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+            min-width: 120px;
+        }
+        
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 50;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover td:first-child {
+            background: #f5f5f7;
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .percentage.high {
+            background: #d1f2eb;
+            color: #00684a;
+        }
+
+        .percentage.medium {
+            background: #fff4e6;
+            color: #b95000;
+        }
+
+        .percentage.low {
+            background: #ffe5e5;
+            color: #bf2600;
+        }
+
+        .website-link {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .website-link:hover {
+            color: #0051d5;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px 16px;
+                max-width: 95%;
+                border-radius: 16px;
+            }
+
+            .modal h2 {
+                font-size: 24px;
+            }
+
+            .modal p {
+                font-size: 14px;
+            }
+
+            .flag-large {
+                font-size: 60px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .country-flag {
+                font-size: 80px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header .subtitle {
+                font-size: 16px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                border-radius: 12px;
+                max-height: calc(100vh - 200px);
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-wrapper::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 2800px;
+            }
+
+            th {
+                padding: 10px 6px;
+                font-size: 10px;
+                min-width: 100px;
+            }
+            
+            td {
+                padding: 10px 6px;
+                font-size: 11px;
+                min-width: 100px;
+                max-width: 150px;
+            }
+            
+            td:first-child {
+                min-width: 140px;
+                max-width: 180px;
+            }
+
+            .university-name {
+                font-size: 13px;
+            }
+
+            .price {
+                font-size: 12px;
+            }
+            
+            th:first-child {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div class="overlay" id="registrationOverlay">
+        <div class="modal">
+            <span class="flag-large">🇲🇾</span>
+            <h2>Регистрация на консультацию</h2>
+            <p>Заполните форму, и мы отправим вам код доступа в Instagram DM</p>
+            
+            <form id="registrationForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="regName">Ваше имя *</label>
+                    <input type="text" id="regName" name="name" required placeholder="Мадияр Бегенов">
+                </div>
+                <div class="form-group">
+                    <label for="regMessage">Расскажите о себе (страна, специальность, бюджет) *</label>
+                    <textarea id="regMessage" name="message" required placeholder="Хочу поступить на программу бакалавриата по бизнесу. Бюджет до $15,000 в год."></textarea>
+                </div>
+                <button type="submit" class="btn" id="regSubmitBtn">Отправить заявку</button>
+                <div class="success-message" id="regSuccessMessage">✅ Заявка отправлена! Проверьте Instagram DM для получения кода доступа.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно ввода кода -->
+    <div class="overlay hidden" id="codeOverlay">
+        <div class="modal">
+            <span class="flag-large">🇲🇾</span>
+            <h2>Введите кодовое слово</h2>
+            <p>Введите кодовое слово, которое мы отправили вам в Instagram DM</p>
+            
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" class="code-input" id="codeInput" placeholder="Введите слово" autocomplete="off">
+                </div>
+                <button type="submit" class="btn" id="codeSubmitBtn">Открыть таблицу</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegistration()">Вернуться к регистрации</button>
+                <div class="error-message" id="codeErrorMessage">❌ Неверное кодовое слово. Проверьте Instagram DM и попробуйте еще раз.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px; line-height: 1;">🇲🇾</div>
+            <h1>Университеты Малайзия</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Университет</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                        <th>Стоимость<br>обучения</th>
+                        <th>Процент<br>поступления</th>
+                        <th>Макс. фин.<br>помощь</th>
+                        <th>Полный<br>грант?</th>
+                        <th>Дедлайн<br>ранней</th>
+                        <th>Дедлайн<br>основной</th>
+                        <th>TOEFL/<br>IELTS/<br>Duolingo</th>
+                        <th>SAT</th>
+                        <th>Эссе</th>
+                        <th>Рекомендательные<br>письма</th>
+                        <th>Стоимость<br>заявки</th>
+                        <th>Ссылка на<br>заявку</th>
+                        <th>Сайт<br>университета</th>
+                        <th>Сайт<br>фин. помощи</th>
+                        <th>Рейтинг<br>по стране</th>
+                        <th>Рейтинг<br>в мире</th>
+                        <th>Профессии</th>
+                        <th>Доп.<br>комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Malaya (UM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage medium">35%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.um.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.um.edu.my" target="_blank" class="website-link">um.edu.my</a></td>
+                        <td><a href="https://www.um.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Лучший вуз Малайзии. Сильнейший во всех областях. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Putra Malaysia (UPM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Серданг</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.upm.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.upm.edu.my" target="_blank" class="website-link">upm.edu.my</a></td>
+                        <td><a href="https://www.upm.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>2-10</td>
+                        <td>100-200</td>
+                        <td>Различные</td>
+                        <td>Второй по рейтингу. Сильнейший в сельском хозяйстве, науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Kebangsaan Malaysia (UKM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Банги</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage medium">38%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ukm.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ukm.my" target="_blank" class="website-link">ukm.my</a></td>
+                        <td><a href="https://www.ukm.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>3-15</td>
+                        <td>200-300</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Третий по рейтингу. Сильный в медицине, науках, гуманитариях. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Sains Malaysia (USM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Пенанг</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.usm.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.usm.my" target="_blank" class="website-link">usm.my</a></td>
+                        <td><a href="https://www.usm.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Топовый вуз. Сильный в науках, медицине, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Teknologi Malaysia (UTM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Джохор-Бару</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.utm.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utm.my" target="_blank" class="website-link">utm.my</a></td>
+                        <td><a href="https://www.utm.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Лучший технический вуз. Сильнейший в инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Teknologi MARA (UiTM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Шах-Алам</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uitm.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uitm.edu.my" target="_blank" class="website-link">uitm.edu.my</a></td>
+                        <td><a href="https://www.uitm.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Бизнес, Экономика, Инженерия, Дизайн</td>
+                        <td>Крупнейший вуз. Сильный в бизнесе, инженерии, дизайне. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Utara Malaysia (UUM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Синток</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uum.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uum.edu.my" target="_blank" class="website-link">uum.edu.my</a></td>
+                        <td><a href="https://www.uum.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Лучший вуз по бизнесу. Сильный в менеджменте, экономике. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Sabah (UMS)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Кота-Кинабалу</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ums.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ums.edu.my" target="_blank" class="website-link">ums.edu.my</a></td>
+                        <td><a href="https://www.ums.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Вуз Сабаха. Сильный в науках, туризме, морских науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Sarawak (UNIMAS)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Кота-Самарахан</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unimas.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unimas.my" target="_blank" class="website-link">unimas.my</a></td>
+                        <td><a href="https://www.unimas.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Саравака. Сильный в науках, инженерии, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Perlis (UniMAP)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Кангар</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unimap.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unimap.edu.my" target="_blank" class="website-link">unimap.edu.my</a></td>
+                        <td><a href="https://www.unimap.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Monash University Malaysia</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Субанг-Джая</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.monash.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.monash.edu.my" target="_blank" class="website-link">monash.edu.my</a></td>
+                        <td><a href="https://www.monash.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Филиал Monash. Сильный в бизнесе, инженерии, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Nottingham Malaysia</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Семених</td>
+                        <td class="price">$9,000</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$5,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nottingham.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nottingham.edu.my" target="_blank" class="website-link">nottingham.edu.my</a></td>
+                        <td><a href="https://www.nottingham.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Филиал Nottingham. Сильный в бизнесе, инженерии, науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Taylor's University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Субанг-Джая</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.taylors.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.taylors.edu.my" target="_blank" class="website-link">taylors.edu.my</a></td>
+                        <td><a href="https://www.taylors.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Дизайн</td>
+                        <td>Частный вуз. Сильный в бизнесе, гостиничном деле, дизайне. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sunway University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Субанг-Джая</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sunway.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sunway.edu.my" target="_blank" class="website-link">sunway.edu.my</a></td>
+                        <td><a href="https://www.sunway.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, IT, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">INTI International University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Нилai</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.newinti.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.newinti.edu.my" target="_blank" class="website-link">newinti.edu.my</a></td>
+                        <td><a href="https://www.newinti.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">HELP University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.help.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.help.edu.my" target="_blank" class="website-link">help.edu.my</a></td>
+                        <td><a href="https://www.help.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, психологии, гуманитариях. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">UCSI University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ucsiuniversity.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ucsiuniversity.edu.my" target="_blank" class="website-link">ucsiuniversity.edu.my</a></td>
+                        <td><a href="https://www.ucsiuniversity.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, бизнесе, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Multimedia University (MMU)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Сайберджая</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mmu.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mmu.edu.my" target="_blank" class="website-link">mmu.edu.my</a></td>
+                        <td><a href="https://www.mmu.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в IT, инженерии, медиа. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Limkokwing University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Сайберджая</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.limkokwing.net" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.limkokwing.net" target="_blank" class="website-link">limkokwing.net</a></td>
+                        <td><a href="https://www.limkokwing.net" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Дизайн</td>
+                        <td>Частный вуз. Сильный в дизайне, медиа, креативных индустриях. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Asia Pacific University (APU)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.apu.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.apu.edu.my" target="_blank" class="website-link">apu.edu.my</a></td>
+                        <td><a href="https://www.apu.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в IT, инженерии, бизнесе. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">SEGI University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.segi.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.segi.edu.my" target="_blank" class="website-link">segi.edu.my</a></td>
+                        <td><a href="https://www.segi.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, медицине, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Management & Science University (MSU)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Шах-Алам</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">63%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.msu.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.msu.edu.my" target="_blank" class="website-link">msu.edu.my</a></td>
+                        <td><a href="https://www.msu.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, медицине, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Tunku Abdul Rahman (UTAR)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Камаpar</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.utar.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utar.edu.my" target="_blank" class="website-link">utar.edu.my</a></td>
+                        <td><a href="https://www.utar.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в инженерии, бизнесе, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Tenaga Nasional (UNITEN)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Каджанг</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uniten.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uniten.edu.my" target="_blank" class="website-link">uniten.edu.my</a></td>
+                        <td><a href="https://www.uniten.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Энергетический вуз. Сильный в инженерии, IT, энергетике. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Pahang (UMP)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Пекан</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ump.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ump.edu.my" target="_blank" class="website-link">ump.edu.my</a></td>
+                        <td><a href="https://www.ump.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Terengganu (UMT)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Теренггану</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">64%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">umt.edu.my</a></td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Морской вуз. Сильный в морских науках, науках, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Sultan Zainal Abidin (UniSZA)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Теренггану</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">66%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">unisza.edu.my</a></td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Исламский вуз. Сильный в медицине, науках, исламоведении. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Kelantan (UMK)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Бачак</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">umk.edu.my</a></td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Вуз Келантана. Сильный в сельском хозяйстве, бизнесе, науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Teknologi Petronas (UTP)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Сери-Искандар</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.utp.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utp.edu.my" target="_blank" class="website-link">utp.edu.my</a></td>
+                        <td><a href="https://www.utp.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Нефтегазовый вуз. Сильнейший в нефтегазовой инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Terengganu (UMT)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Теренггану</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">64%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">umt.edu.my</a></td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Морской вуз. Сильный в морских науках, науках, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Sultan Zainal Abidin (UniSZA)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Теренггану</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">66%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">unisza.edu.my</a></td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Исламский вуз. Сильный в медицине, науках, исламоведении. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Kelantan (UMK)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Бачак</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">umk.edu.my</a></td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Вуз Келантана. Сильный в сельском хозяйстве, бизнесе, науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Teknologi Petronas (UTP)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Сери-Искандар</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.utp.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utp.edu.my" target="_blank" class="website-link">utp.edu.my</a></td>
+                        <td><a href="https://www.utp.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Нефтегазовый вуз. Сильнейший в нефтегазовой инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Tun Hussein Onn Malaysia (UTHM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Бату-Пахат</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uthm.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uthm.edu.my" target="_blank" class="website-link">uthm.edu.my</a></td>
+                        <td><a href="https://www.uthm.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Pahang (UMP)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Пекан</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ump.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ump.edu.my" target="_blank" class="website-link">ump.edu.my</a></td>
+                        <td><a href="https://www.ump.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Terengganu (UMT)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Теренггану</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">64%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">umt.edu.my</a></td>
+                        <td><a href="https://www.umt.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Морской вуз. Сильный в морских науках, науках, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Sultan Zainal Abidin (UniSZA)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Теренггану</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">66%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">unisza.edu.my</a></td>
+                        <td><a href="https://www.unisza.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Исламский вуз. Сильный в медицине, науках, исламоведении. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Kelantan (UMK)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Бачак</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">umk.edu.my</a></td>
+                        <td><a href="https://www.umk.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Вуз Келантана. Сильный в сельском хозяйстве, бизнесе, науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Teknologi MARA (UiTM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Шах-Алам</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uitm.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uitm.edu.my" target="_blank" class="website-link">uitm.edu.my</a></td>
+                        <td><a href="https://www.uitm.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Бизнес, Экономика, Инженерия, Дизайн</td>
+                        <td>Крупнейший вуз. Сильный в бизнесе, инженерии, дизайне. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Utara Malaysia (UUM)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Синток</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uum.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uum.edu.my" target="_blank" class="website-link">uum.edu.my</a></td>
+                        <td><a href="https://www.uum.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Лучший вуз по бизнесу. Сильный в менеджменте, экономике. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Sabah (UMS)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Кота-Кинабалу</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ums.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ums.edu.my" target="_blank" class="website-link">ums.edu.my</a></td>
+                        <td><a href="https://www.ums.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Вуз Сабаха. Сильный в науках, туризме, морских науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Sarawak (UNIMAS)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Кота-Самарахан</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$1,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unimas.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unimas.my" target="_blank" class="website-link">unimas.my</a></td>
+                        <td><a href="https://www.unimas.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Вуз Саравака. Сильный в науках, инженерии, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Malaysia Perlis (UniMAP)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Кангар</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.unimap.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unimap.edu.my" target="_blank" class="website-link">unimap.edu.my</a></td>
+                        <td><a href="https://www.unimap.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Monash University Malaysia</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Субанг-Джая</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.monash.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.monash.edu.my" target="_blank" class="website-link">monash.edu.my</a></td>
+                        <td><a href="https://www.monash.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Филиал Monash. Сильный в бизнесе, инженерии, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Nottingham Malaysia</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Семених</td>
+                        <td class="price">$9,000</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$5,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nottingham.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nottingham.edu.my" target="_blank" class="website-link">nottingham.edu.my</a></td>
+                        <td><a href="https://www.nottingham.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Филиал Nottingham. Сильный в бизнесе, инженерии, науках. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Taylor's University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Субанг-Джая</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.taylors.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.taylors.edu.my" target="_blank" class="website-link">taylors.edu.my</a></td>
+                        <td><a href="https://www.taylors.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Дизайн</td>
+                        <td>Частный вуз. Сильный в бизнесе, гостиничном деле, дизайне. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sunway University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Субанг-Джая</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sunway.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sunway.edu.my" target="_blank" class="website-link">sunway.edu.my</a></td>
+                        <td><a href="https://www.sunway.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, IT, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">INTI International University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Нилai</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.newinti.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.newinti.edu.my" target="_blank" class="website-link">newinti.edu.my</a></td>
+                        <td><a href="https://www.newinti.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">HELP University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.help.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.help.edu.my" target="_blank" class="website-link">help.edu.my</a></td>
+                        <td><a href="https://www.help.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, психологии, гуманитариях. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">UCSI University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ucsiuniversity.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ucsiuniversity.edu.my" target="_blank" class="website-link">ucsiuniversity.edu.my</a></td>
+                        <td><a href="https://www.ucsiuniversity.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, бизнесе, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Multimedia University (MMU)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Сайберджая</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mmu.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mmu.edu.my" target="_blank" class="website-link">mmu.edu.my</a></td>
+                        <td><a href="https://www.mmu.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в IT, инженерии, медиа. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Limkokwing University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Сайберджая</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.limkokwing.net" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.limkokwing.net" target="_blank" class="website-link">limkokwing.net</a></td>
+                        <td><a href="https://www.limkokwing.net" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Дизайн</td>
+                        <td>Частный вуз. Сильный в дизайне, медиа, креативных индустриях. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Asia Pacific University (APU)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.apu.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.apu.edu.my" target="_blank" class="website-link">apu.edu.my</a></td>
+                        <td><a href="https://www.apu.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в IT, инженерии, бизнесе. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">SEGI University</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Куала-Лумпур</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.segi.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.segi.edu.my" target="_blank" class="website-link">segi.edu.my</a></td>
+                        <td><a href="https://www.segi.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, медицине, инженерии. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Management & Science University (MSU)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Шах-Алам</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage high">63%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.msu.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.msu.edu.my" target="_blank" class="website-link">msu.edu.my</a></td>
+                        <td><a href="https://www.msu.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, IT, Компьютерные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, медицине, IT. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Tunku Abdul Rahman (UTAR)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Камаpar</td>
+                        <td class="price">$3,500</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$2,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.utar.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utar.edu.my" target="_blank" class="website-link">utar.edu.my</a></td>
+                        <td><a href="https://www.utar.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в инженерии, бизнесе, медицине. Стипендии доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Universiti Tenaga Nasional (UNITEN)</div>
+                        </td>
+                        <td>Малайзия</td>
+                        <td>Каджанг</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Март</td>
+                        <td>IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Мотивационное письмо</td>
+                        <td>Требуются</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uniten.edu.my" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uniten.edu.my" target="_blank" class="website-link">uniten.edu.my</a></td>
+                        <td><a href="https://www.uniten.edu.my" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Энергетический вуз. Сильный в инженерии, IT, энергетике. Стипендии доступны.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Кодовое слово для Малайзия (будет отправлено в Instagram DM после регистрации)
+        const COUNTRY_CODE = 'ПЕТРОНАС';
+        const COUNTRY_NAME = 'Малайзия';
+        const STORAGE_KEY = 'malaysia_authenticated';
+
+        // Проверяем, был ли пользователь уже авторизован
+        if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+            document.getElementById('registrationOverlay').classList.add('hidden');
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const name = form.regName.value;
+            const message = form.regMessage.value;
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30, 20, 30]);
+            }
+            
+            // Формируем сообщение для WhatsApp
+            const whatsappMessage = `Здравствуйте! Хочу зарегистрироваться на бесплатную консультацию по поступлению в университеты.\n\nИмя: ${name}\n\n${message ? 'О себе: ' + message : ''}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Открываем WhatsApp
+            window.open(`https://wa.me/77773133500?text=${encodedMessage}`, '_blank');
+            
+            // Показываем сообщение об успехе
+            document.getElementById('regSuccessMessage').style.display = 'block';
+            form.reset();
+            
+            // Через 2 секунды переходим к вводу кода
+            setTimeout(() => {
+                document.getElementById('registrationOverlay').classList.add('hidden');
+                document.getElementById('codeOverlay').classList.remove('hidden');
+                document.getElementById('codeInput').focus();
+            }, 2000);
+        }
+
+        function handleCodeSubmit(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('codeInput');
+            const error = document.getElementById('codeErrorMessage');
+            const codeOverlay = document.getElementById('codeOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+
+            const inputValue = input.value.toUpperCase().trim();
+            if (inputValue === COUNTRY_CODE.toUpperCase()) {
+                // Правильное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50]);
+                }
+                codeOverlay.classList.add('hidden');
+                mainContent.style.display = 'block';
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } else {
+                // Неверное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#bf2600';
+                setTimeout(() => {
+                    input.style.borderColor = '#d2d2d7';
+                }, 1000);
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('registrationOverlay').classList.remove('hidden');
+        }
+
+        // Автоматическая проверка при вводе 4 цифр
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                codeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleCodeSubmit(e);
+                    }
+                });
+            }
+
+            // Эффекты для всех кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

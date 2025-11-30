@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты Турция</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .modal p {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .flag-large {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f5f5f7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .code-input {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 500;
+            padding: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:hover {
+            background: #0051d5;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e7;
+        }
+
+        .error-message {
+            color: #bf2600;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message {
+            color: #00684a;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .country-flag {
+            font-size: 120px;
+            margin-bottom: 24px;
+            display: block;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 300px);
+            position: relative;
+        }
+        
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f5f5f7;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #86868b;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #6e6e73;
+        }
+
+        table {
+            width: 100%;
+            min-width: 3000px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f5f5f7;
+            border-bottom: 2px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            color: #86868b;
+            white-space: nowrap;
+            background: #f5f5f7;
+            min-width: 120px;
+        }
+        
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 101;
+            background: #f5f5f7;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e7;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f7;
+        }
+
+        td {
+            padding: 14px 10px;
+            vertical-align: top;
+            color: #1d1d1f;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+            min-width: 120px;
+        }
+        
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 50;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover td:first-child {
+            background: #f5f5f7;
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .percentage.high {
+            background: #d1f2eb;
+            color: #00684a;
+        }
+
+        .percentage.medium {
+            background: #fff4e6;
+            color: #b95000;
+        }
+
+        .percentage.low {
+            background: #ffe5e5;
+            color: #bf2600;
+        }
+
+        .website-link {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .website-link:hover {
+            color: #0051d5;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px 16px;
+                max-width: 95%;
+                border-radius: 16px;
+            }
+
+            .modal h2 {
+                font-size: 24px;
+            }
+
+            .modal p {
+                font-size: 14px;
+            }
+
+            .flag-large {
+                font-size: 60px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .country-flag {
+                font-size: 80px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header .subtitle {
+                font-size: 16px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                border-radius: 12px;
+                max-height: calc(100vh - 200px);
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-wrapper::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 2800px;
+            }
+
+            th {
+                padding: 10px 6px;
+                font-size: 10px;
+                min-width: 100px;
+            }
+            
+            td {
+                padding: 10px 6px;
+                font-size: 11px;
+                min-width: 100px;
+                max-width: 150px;
+            }
+            
+            td:first-child {
+                min-width: 140px;
+                max-width: 180px;
+            }
+
+            .university-name {
+                font-size: 13px;
+            }
+
+            .price {
+                font-size: 12px;
+            }
+            
+            th:first-child {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div class="overlay" id="registrationOverlay">
+        <div class="modal">
+            <span class="flag-large">🇹🇷</span>
+            <h2>Регистрация на консультацию</h2>
+            <p>Заполните форму, и мы отправим вам код доступа в Instagram DM</p>
+            
+            <form id="registrationForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="regName">Ваше имя *</label>
+                    <input type="text" id="regName" name="name" required placeholder="Мадияр Бегенов">
+                </div>
+                <div class="form-group">
+                    <label for="regMessage">Расскажите о себе (страна, специальность, бюджет) *</label>
+                    <textarea id="regMessage" name="message" required placeholder="Хочу поступить на программу бакалавриата по бизнесу. Бюджет до $15,000 в год."></textarea>
+                </div>
+                <button type="submit" class="btn" id="regSubmitBtn">Отправить заявку</button>
+                <div class="success-message" id="regSuccessMessage">✅ Заявка отправлена! Проверьте Instagram DM для получения кода доступа.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно ввода кода -->
+    <div class="overlay hidden" id="codeOverlay">
+        <div class="modal">
+            <span class="flag-large">🇹🇷</span>
+            <h2>Введите кодовое слово</h2>
+            <p>Введите кодовое слово, которое мы отправили вам в Instagram DM</p>
+            
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" class="code-input" id="codeInput" placeholder="Введите слово" autocomplete="off">
+                </div>
+                <button type="submit" class="btn" id="codeSubmitBtn">Открыть таблицу</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegistration()">Вернуться к регистрации</button>
+                <div class="error-message" id="codeErrorMessage">❌ Неверное кодовое слово. Проверьте Instagram DM и попробуйте еще раз.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px; line-height: 1;">🇹🇷</div>
+            <h1>Университеты Турция</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Университет</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                        <th>Стоимость<br>обучения</th>
+                        <th>Процент<br>поступления</th>
+                        <th>Макс. фин.<br>помощь</th>
+                        <th>Полный<br>грант?</th>
+                        <th>Дедлайн<br>ранней</th>
+                        <th>Дедлайн<br>основной</th>
+                        <th>TOEFL/<br>IELTS/<br>Duolingo</th>
+                        <th>SAT</th>
+                        <th>Эссе</th>
+                        <th>Рекомендательные<br>письма</th>
+                        <th>Стоимость<br>заявки</th>
+                        <th>Ссылка на<br>заявку</th>
+                        <th>Сайт<br>университета</th>
+                        <th>Сайт<br>фин. помощи</th>
+                        <th>Рейтинг<br>по стране</th>
+                        <th>Рейтинг<br>в мире</th>
+                        <th>Профессии</th>
+                        <th>Доп.<br>комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="university-name">Koç University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$22,500</td>
+                        <td><span class="percentage low">15%</span></td>
+                        <td class="price">$22,500</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://international.ku.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://international.ku.edu.tr" target="_blank" class="website-link">international.ku.edu.tr</a></td>
+                        <td><a href="https://international.ku.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Вуз №1 в Турции. Кампус в лесу. Основан богатейшей семьей Koç Holding. Дипломы котируются в США и Европе.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sabancı University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$19,500</td>
+                        <td><span class="percentage medium">30%</span></td>
+                        <td class="price">$19,500</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sabanciuniv.edu" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sabanciuniv.edu" target="_blank" class="website-link">sabanciuniv.edu</a></td>
+                        <td><a href="https://www.sabanciuniv.edu" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Самый инновационный. Уникальная система: специальность выбираете после 1-2 года. Можно сменить инженерию на искусство.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Bilkent University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$14,500</td>
+                        <td><span class="percentage low">25%</span></td>
+                        <td class="price">$14,500</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://w3.bilkent.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://w3.bilkent.edu.tr" target="_blank" class="website-link">w3.bilkent.edu.tr</a></td>
+                        <td><a href="https://w3.bilkent.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Первый частный вуз Турции. Город в городе. Очень безопасный кампус. Любят талантливых иностранцев (SAT 1300+ часто дает скидки).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Middle East Technical University (METU)</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$1,000</td>
+                        <td><span class="percentage low">12%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.metu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.metu.edu.tr" target="_blank" class="website-link">metu.edu.tr</a></td>
+                        <td><a href="https://www.metu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Инженерия</td>
+                        <td>Лучший госвуз. Кампус в лесу с озером Эймир. Самый сильный диплом инженера в регионе. Топ-100 по нефтегазу и инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Boğaziçi University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$1,500</td>
+                        <td><span class="percentage low">7%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT 1450+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.boun.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.boun.edu.tr" target="_blank" class="website-link">boun.edu.tr</a></td>
+                        <td><a href="https://www.boun.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Самый тусовочный и либеральный. Кампус над Босфором. Бывший американский колледж (Robert College). Выпускники — элита интеллигенции.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Technical University (ITU)</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$2,250</td>
+                        <td><span class="percentage low">20%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.itu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.itu.edu.tr" target="_blank" class="website-link">itu.edu.tr</a></td>
+                        <td><a href="https://www.itu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Инженерия</td>
+                        <td>Старейший технический вуз (1773). Колыбель инженеров. Многие президенты Турции учились здесь. Топ-100 по инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hacettepe University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$4,500</td>
+                        <td><span class="percentage low">7%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июнь-июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.hacettepe.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hacettepe.edu.tr" target="_blank" class="website-link">hacettepe.edu.tr</a></td>
+                        <td><a href="https://www.hacettepe.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Медицинская мекка Турции. Медицина №1 в стране. Два огромных кампуса. Если хотите стать врачом в Турции — это цель №1.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Bahçeşehir University (BAU)</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,500</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$3,250</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.bau.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bau.edu.tr" target="_blank" class="website-link">bau.edu.tr</a></td>
+                        <td><a href="https://www.bau.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Университет в сердце Стамбула (Бешикташ на берегу Босфора). Самый 'инстаграмный' вуз. Студенты ездят между кампусами на кораблике.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Medipol University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Сентябрь</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.medipol.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.medipol.edu.tr" target="_blank" class="website-link">medipol.edu.tr</a></td>
+                        <td><a href="https://www.medipol.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Медицина и технологии будущего. Вуз владеет огромной сетью больниц Medipol. Самая сильная практика для медиков. Медицина ~$25k.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Aydin University (IAU)</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$4,000</td>
+                        <td><span class="percentage high">80%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Октябрь</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.aydin.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.aydin.edu.tr" target="_blank" class="website-link">aydin.edu.tr</a></td>
+                        <td><a href="https://www.aydin.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Самый популярный среди иностранцев. Огромный кампус с технопарком. Очень много студентов из СНГ. Доступная цена и хорошая инфраструктура.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Özyeğin University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$12,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$12,000</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ozyegin.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ozyegin.edu.tr" target="_blank" class="website-link">ozyegin.edu.tr</a></td>
+                        <td><a href="https://www.ozyegin.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Вуз предпринимателей. Лучший по трудоустройству. Самый 'зеленый' кампус (LEED Gold). Пилотское дело, гастрономия (Le Cordon Bleu).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Antalya Bilim University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анталья</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Сентябрь</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.antalya.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.antalya.edu.tr" target="_blank" class="website-link">antalya.edu.tr</a></td>
+                        <td><a href="https://www.antalya.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Учеба на курорте. Идеально, если хотите жить у моря. Вуз сотрудничает с отелями Rixos (гарантированная практика). Туризм и стоматология.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Izmir Institute of Technology (IYTE)</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Измир</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage medium">30%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.iyte.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.iyte.edu.tr" target="_blank" class="website-link">iyte.edu.tr</a></td>
+                        <td><a href="https://www.iyte.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Естественные науки</td>
+                        <td>Силиконовая долина Измира. Кампус на берегу Эгейского моря в курортной зоне. 'Турецкая Калифорния'. Только технические науки.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ankara University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$1,000</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ankara.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ankara.edu.tr" target="_blank" class="website-link">ankara.edu.tr</a></td>
+                        <td><a href="https://www.ankara.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Медицина, Право, Политология, Международные отношения</td>
+                        <td>Первый вуз Республики (основан Ататюрком). Если хотите стать дипломатом или работать в госструктурах Турции — вам сюда. Право, политология, медицина.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Ege University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Измир</td>
+                        <td class="price">$750</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ege.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ege.edu.tr" target="_blank" class="website-link">ege.edu.tr</a></td>
+                        <td><a href="https://www.ege.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Огромный кампус-город. Измир — самый светский и либеральный город Турции. Вуз имеет свою станцию метро. Сельское хозяйство, медицина, текстиль.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$2,000</td>
+                        <td><span class="percentage medium">35%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.istanbul.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.istanbul.edu.tr" target="_blank" class="website-link">istanbul.edu.tr</a></td>
+                        <td><a href="https://www.istanbul.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>30-50</td>
+                        <td>800-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Старейший вуз Турции (1453). Сильнейший в медицине, праве, гуманитариях. Очень конкурентный.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Marmara University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$1,800</td>
+                        <td><span class="percentage medium">38%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.marmara.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.marmara.edu.tr" target="_blank" class="website-link">marmara.edu.tr</a></td>
+                        <td><a href="https://www.marmara.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Медицина, Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Крупный вуз. Сильный в медицине, бизнесе, гуманитариях. Очень конкурентный.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yıldız Technical University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$1,500</td>
+                        <td><span class="percentage medium">42%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.yildiz.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yildiz.edu.tr" target="_blank" class="website-link">yildiz.edu.tr</a></td>
+                        <td><a href="https://www.yildiz.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT, архитектуре.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Galatasaray University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$3,000</td>
+                        <td><span class="percentage medium">30%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>Французский B2+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gsu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gsu.edu.tr" target="_blank" class="website-link">gsu.edu.tr</a></td>
+                        <td><a href="https://www.gsu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Франкоязычный вуз. Сильный в праве, экономике, гуманитариях. Очень конкурентный.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Şehir University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sehir.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sehir.edu.tr" target="_blank" class="website-link">sehir.edu.tr</a></td>
+                        <td><a href="https://www.sehir.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Işık University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.isikun.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.isikun.edu.tr" target="_blank" class="website-link">isikun.edu.tr</a></td>
+                        <td><a href="https://www.isikun.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Дизайн</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, дизайне. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Bilgi University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$9,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$4,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.bilgi.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bilgi.edu.tr" target="_blank" class="website-link">bilgi.edu.tr</a></td>
+                        <td><a href="https://www.bilgi.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, медиа, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Kültür University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,500</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$3,250</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.iku.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.iku.edu.tr" target="_blank" class="website-link">iku.edu.tr</a></td>
+                        <td><a href="https://www.iku.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yeditepe University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$10,000</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$5,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.yeditepe.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yeditepe.edu.tr" target="_blank" class="website-link">yeditepe.edu.tr</a></td>
+                        <td><a href="https://www.yeditepe.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, бизнесе, инженерии. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Acıbadem University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$12,000</td>
+                        <td><span class="percentage medium">40%</span></td>
+                        <td class="price">$6,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.acibadem.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.acibadem.edu.tr" target="_blank" class="website-link">acibadem.edu.tr</a></td>
+                        <td><a href="https://www.acibadem.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Медицинский вуз. Сильнейший в медицине. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Altınbaş University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.altinbas.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.altinbas.edu.tr" target="_blank" class="website-link">altinbas.edu.tr</a></td>
+                        <td><a href="https://www.altinbas.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Bahçeşehir University (BAU)</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,500</td>
+                        <td><span class="percentage high">70%</span></td>
+                        <td class="price">$3,250</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Уточнить на сайте</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.bau.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bau.edu.tr" target="_blank" class="website-link">bau.edu.tr</a></td>
+                        <td><a href="https://www.bau.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Университет в сердце Стамбула (Бешикташ на берегу Босфора). Самый 'инстаграмный' вуз. Студенты ездят между кампусами на кораблике.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Beykent University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">75%</span></td>
+                        <td class="price">$2,750</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.beykent.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.beykent.edu.tr" target="_blank" class="website-link">beykent.edu.tr</a></td>
+                        <td><a href="https://www.beykent.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Doğuş University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">78%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.dogus.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dogus.edu.tr" target="_blank" class="website-link">dogus.edu.tr</a></td>
+                        <td><a href="https://www.dogus.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Fatih Sultan Mehmet University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.fsm.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.fsm.edu.tr" target="_blank" class="website-link">fsm.edu.tr</a></td>
+                        <td><a href="https://www.fsm.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Gedik University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">76%</span></td>
+                        <td class="price">$2,750</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gedik.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gedik.edu.tr" target="_blank" class="website-link">gedik.edu.tr</a></td>
+                        <td><a href="https://www.gedik.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Commerce University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage high">68%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.ticaret.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.ticaret.edu.tr" target="_blank" class="website-link">ticaret.edu.tr</a></td>
+                        <td><a href="https://www.ticaret.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Частный вуз. Сильнейший в бизнесе, экономике, менеджменте. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Gelişim University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">80%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gelisim.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gelisim.edu.tr" target="_blank" class="website-link">gelisim.edu.tr</a></td>
+                        <td><a href="https://www.gelisim.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Medeniyet University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$1,200</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.medeniyet.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.medeniyet.edu.tr" target="_blank" class="website-link">medeniyet.edu.tr</a></td>
+                        <td><a href="https://www.medeniyet.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Государственный вуз. Сильный в медицине, науках, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Istanbul Sabahattin Zaim University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">73%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.izu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.izu.edu.tr" target="_blank" class="website-link">izu.edu.tr</a></td>
+                        <td><a href="https://www.izu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kadir Has University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.khas.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.khas.edu.tr" target="_blank" class="website-link">khas.edu.tr</a></td>
+                        <td><a href="https://www.khas.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, медиа. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Maltepe University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">77%</span></td>
+                        <td class="price">$2,750</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.maltepe.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.maltepe.edu.tr" target="_blank" class="website-link">maltepe.edu.tr</a></td>
+                        <td><a href="https://www.maltepe.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">MEF University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$9,000</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$4,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mef.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mef.edu.tr" target="_blank" class="website-link">mef.edu.tr</a></td>
+                        <td><a href="https://www.mef.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, науках. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Nişantaşı University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,000</td>
+                        <td><span class="percentage high">79%</span></td>
+                        <td class="price">$2,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.nisantasi.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nisantasi.edu.tr" target="_blank" class="website-link">nisantasi.edu.tr</a></td>
+                        <td><a href="https://www.nisantasi.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Okan University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">71%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.okan.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.okan.edu.tr" target="_blank" class="website-link">okan.edu.tr</a></td>
+                        <td><a href="https://www.okan.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, инженерии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Piri Reis University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">74%</span></td>
+                        <td class="price">$2,750</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.pirireis.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pirireis.edu.tr" target="_blank" class="website-link">pirireis.edu.tr</a></td>
+                        <td><a href="https://www.pirireis.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Морской вуз. Сильнейший в морских науках, инженерии. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Şehir University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sehir.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sehir.edu.tr" target="_blank" class="website-link">sehir.edu.tr</a></td>
+                        <td><a href="https://www.sehir.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в бизнесе, гуманитариях, науках. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Üsküdar University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">72%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uskudar.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uskudar.edu.tr" target="_blank" class="website-link">uskudar.edu.tr</a></td>
+                        <td><a href="https://www.uskudar.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Частный вуз. Сильный в медицине, психологии, гуманитариях. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yeni Yüzyıl University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Стамбул</td>
+                        <td class="price">$5,500</td>
+                        <td><span class="percentage high">75%</span></td>
+                        <td class="price">$2,750</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.yeniyuzyil.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yeniyuzyil.edu.tr" target="_blank" class="website-link">yeniyuzyil.edu.tr</a></td>
+                        <td><a href="https://www.yeniyuzyil.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, бизнесе, инженерии. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Zonguldak Bülent Ecevit University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Зонгулдак</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.beun.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.beun.edu.tr" target="_blank" class="website-link">beun.edu.tr</a></td>
+                        <td><a href="https://www.beun.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в инженерии, науках, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kocaeli University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Измит</td>
+                        <td class="price">$1,000</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kocaeli.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kocaeli.edu.tr" target="_blank" class="website-link">kocaeli.edu.tr</a></td>
+                        <td><a href="https://www.kocaeli.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в инженерии, науках, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Sakarya University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Сакарья</td>
+                        <td class="price">$900</td>
+                        <td><span class="percentage high">52%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.sakarya.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.sakarya.edu.tr" target="_blank" class="website-link">sakarya.edu.tr</a></td>
+                        <td><a href="https://www.sakarya.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Государственный вуз. Сильный в инженерии, науках, бизнесе.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Bursa Technical University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Бурса</td>
+                        <td class="price">$1,200</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.btu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.btu.edu.tr" target="_blank" class="website-link">btu.edu.tr</a></td>
+                        <td><a href="https://www.btu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, IT, Компьютерные науки</td>
+                        <td>Технический вуз. Сильный в инженерии, IT, науках.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Uludağ University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Бурса</td>
+                        <td class="price">$1,100</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.uludag.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uludag.edu.tr" target="_blank" class="website-link">uludag.edu.tr</a></td>
+                        <td><a href="https://www.uludag.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в медицине, науках, инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Çanakkale Onsekiz Mart University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Чанаккале</td>
+                        <td class="price">$900</td>
+                        <td><span class="percentage high">54%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.comu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.comu.edu.tr" target="_blank" class="website-link">comu.edu.tr</a></td>
+                        <td><a href="https://www.comu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, Гуманитарные науки</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Trakya University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Эдирне</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">56%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.trakya.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.trakya.edu.tr" target="_blank" class="website-link">trakya.edu.tr</a></td>
+                        <td><a href="https://www.trakya.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Гуманитарные науки</td>
+                        <td>Государственный вуз. Сильный в медицине, науках, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Balıkesir University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Балыкесир</td>
+                        <td class="price">$900</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.balikesir.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.balikesir.edu.tr" target="_blank" class="website-link">balikesir.edu.tr</a></td>
+                        <td><a href="https://www.balikesir.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Muğla Sıtkı Koçman University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Мугла</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.mu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mu.edu.tr" target="_blank" class="website-link">mu.edu.tr</a></td>
+                        <td><a href="https://www.mu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Государственный вуз. Сильный в науках, туризме, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Pamukkale University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Денизли</td>
+                        <td class="price">$900</td>
+                        <td><span class="percentage high">57%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.pau.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pau.edu.tr" target="_blank" class="website-link">pau.edu.tr</a></td>
+                        <td><a href="https://www.pau.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в медицине, науках, инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Adnan Menderes University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Айдын</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">59%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.adu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.adu.edu.tr" target="_blank" class="website-link">adu.edu.tr</a></td>
+                        <td><a href="https://www.adu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Celal Bayar University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Маниса</td>
+                        <td class="price">$900</td>
+                        <td><span class="percentage high">58%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cbu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cbu.edu.tr" target="_blank" class="website-link">cbu.edu.tr</a></td>
+                        <td><a href="https://www.cbu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в медицине, науках, инженерии.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Dokuz Eylül University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Измир</td>
+                        <td class="price">$1,000</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.deu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.deu.edu.tr" target="_blank" class="website-link">deu.edu.tr</a></td>
+                        <td><a href="https://www.deu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в медицине, науках, инженерии. Конкурентный.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kütahya Dumlupınar University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Кютахья</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.dpu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dpu.edu.tr" target="_blank" class="website-link">dpu.edu.tr</a></td>
+                        <td><a href="https://www.dpu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия, Гуманитарные науки</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, гуманитариях.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Afyon Kocatepe University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Афьонкарахисар</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">61%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.aku.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.aku.edu.tr" target="_blank" class="website-link">aku.edu.tr</a></td>
+                        <td><a href="https://www.aku.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Kırıkkale University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Кырыккале</td>
+                        <td class="price">$800</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.kku.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.kku.edu.tr" target="_blank" class="website-link">kku.edu.tr</a></td>
+                        <td><a href="https://www.kku.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в науках, инженерии, медицине.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Gazi University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$1,200</td>
+                        <td><span class="percentage medium">48%</span></td>
+                        <td class="price">$0</td>
+                        <td>Нет</td>
+                        <td>Нет</td>
+                        <td>Июль</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.gazi.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gazi.edu.tr" target="_blank" class="website-link">gazi.edu.tr</a></td>
+                        <td><a href="https://www.gazi.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Инженерия</td>
+                        <td>Государственный вуз. Сильный в инженерии, науках, медицине. Конкурентный.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Atılım University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$7,000</td>
+                        <td><span class="percentage high">65%</span></td>
+                        <td class="price">$3,500</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.atilim.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.atilim.edu.tr" target="_blank" class="website-link">atilim.edu.tr</a></td>
+                        <td><a href="https://www.atilim.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в инженерии, бизнесе, науках. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Başkent University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$8,000</td>
+                        <td><span class="percentage high">60%</span></td>
+                        <td class="price">$4,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.baskent.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.baskent.edu.tr" target="_blank" class="website-link">baskent.edu.tr</a></td>
+                        <td><a href="https://www.baskent.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина, Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в медицине, бизнесе, инженерии. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Çankaya University</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$7,500</td>
+                        <td><span class="percentage high">62%</span></td>
+                        <td class="price">$3,750</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.cankaya.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cankaya.edu.tr" target="_blank" class="website-link">cankaya.edu.tr</a></td>
+                        <td><a href="https://www.cankaya.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Частный вуз. Сильный в инженерии, бизнесе, науках. Скидки доступны.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">TOBB University of Economics and Technology</div>
+                        </td>
+                        <td>Турция</td>
+                        <td>Анкара</td>
+                        <td class="price">$6,000</td>
+                        <td><span class="percentage high">55%</span></td>
+                        <td class="price">$3,000</td>
+                        <td>Частично</td>
+                        <td>Нет</td>
+                        <td>Август</td>
+                        <td>TOEFL 80+ или IELTS 6.0+</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.etu.edu.tr" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.etu.edu.tr" target="_blank" class="website-link">etu.edu.tr</a></td>
+                        <td><a href="https://www.etu.edu.tr" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Бизнес, Экономика, Инженерия</td>
+                        <td>Элитный вуз. Сильнейший в бизнесе, экономике, инженерии. Скидки доступны.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Кодовое слово для Турция (будет отправлено в Instagram DM после регистрации)
+        const COUNTRY_CODE = 'БОСФОР';
+        const COUNTRY_NAME = 'Турция';
+        const STORAGE_KEY = 'turkey_authenticated';
+
+        // Проверяем, был ли пользователь уже авторизован
+        if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+            document.getElementById('registrationOverlay').classList.add('hidden');
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const name = form.regName.value;
+            const message = form.regMessage.value;
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30, 20, 30]);
+            }
+            
+            // Формируем сообщение для WhatsApp
+            const whatsappMessage = `Здравствуйте! Хочу зарегистрироваться на бесплатную консультацию по поступлению в университеты.\n\nИмя: ${name}\n\n${message ? 'О себе: ' + message : ''}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Открываем WhatsApp
+            window.open(`https://wa.me/77773133500?text=${encodedMessage}`, '_blank');
+            
+            // Показываем сообщение об успехе
+            document.getElementById('regSuccessMessage').style.display = 'block';
+            form.reset();
+            
+            // Через 2 секунды переходим к вводу кода
+            setTimeout(() => {
+                document.getElementById('registrationOverlay').classList.add('hidden');
+                document.getElementById('codeOverlay').classList.remove('hidden');
+                document.getElementById('codeInput').focus();
+            }, 2000);
+        }
+
+        function handleCodeSubmit(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('codeInput');
+            const error = document.getElementById('codeErrorMessage');
+            const codeOverlay = document.getElementById('codeOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+
+            const inputValue = input.value.toUpperCase().trim();
+            if (inputValue === COUNTRY_CODE.toUpperCase()) {
+                // Правильное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50]);
+                }
+                codeOverlay.classList.add('hidden');
+                mainContent.style.display = 'block';
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } else {
+                // Неверное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#bf2600';
+                setTimeout(() => {
+                    input.style.borderColor = '#d2d2d7';
+                }, 1000);
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('registrationOverlay').classList.remove('hidden');
+        }
+
+        // Автоматическая проверка при вводе 4 цифр
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                codeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleCodeSubmit(e);
+                    }
+                });
+            }
+
+            // Эффекты для всех кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

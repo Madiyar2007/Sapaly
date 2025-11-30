@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapaly Education - Университеты США</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .modal p {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .flag-large {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f5f5f7;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .code-input {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 500;
+            padding: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn:hover {
+            background: #0051d5;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e7;
+        }
+
+        .error-message {
+            color: #bf2600;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message {
+            color: #00684a;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .country-flag {
+            font-size: 120px;
+            margin-bottom: 24px;
+            display: block;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: #86868b;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 300px);
+            position: relative;
+        }
+        
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f5f5f7;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #86868b;
+            border-radius: 4px;
+        }
+        
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #6e6e73;
+        }
+
+        table {
+            width: 100%;
+            min-width: 3000px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f5f5f7;
+            border-bottom: 2px solid #e5e5e7;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            color: #86868b;
+            white-space: nowrap;
+            background: #f5f5f7;
+            min-width: 120px;
+        }
+        
+        th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 101;
+            background: #f5f5f7;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e5e5e7;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f7;
+        }
+
+        td {
+            padding: 14px 10px;
+            vertical-align: top;
+            color: #1d1d1f;
+            font-size: 13px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 200px;
+            min-width: 120px;
+        }
+        
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 50;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        tbody tr:hover td:first-child {
+            background: #f5f5f7;
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 6px;
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .percentage.high {
+            background: #d1f2eb;
+            color: #00684a;
+        }
+
+        .percentage.medium {
+            background: #fff4e6;
+            color: #b95000;
+        }
+
+        .percentage.low {
+            background: #ffe5e5;
+            color: #bf2600;
+        }
+
+        .website-link {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .website-link:hover {
+            color: #0051d5;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 24px 16px;
+                max-width: 95%;
+                border-radius: 16px;
+            }
+
+            .modal h2 {
+                font-size: 24px;
+            }
+
+            .modal p {
+                font-size: 14px;
+            }
+
+            .flag-large {
+                font-size: 60px;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .country-flag {
+                font-size: 80px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header .subtitle {
+                font-size: 16px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                border-radius: 12px;
+                max-height: calc(100vh - 200px);
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-wrapper::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 2800px;
+            }
+
+            th {
+                padding: 10px 6px;
+                font-size: 10px;
+                min-width: 100px;
+            }
+            
+            td {
+                padding: 10px 6px;
+                font-size: 11px;
+                min-width: 100px;
+                max-width: 150px;
+            }
+            
+            td:first-child {
+                min-width: 140px;
+                max-width: 180px;
+            }
+
+            .university-name {
+                font-size: 13px;
+            }
+
+            .price {
+                font-size: 12px;
+            }
+            
+            th:first-child {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно регистрации -->
+    <div class="overlay" id="registrationOverlay">
+        <div class="modal">
+            <span class="flag-large">🇺🇸</span>
+            <h2>Регистрация на консультацию</h2>
+            <p>Заполните форму, и мы отправим вам код доступа в Instagram DM</p>
+            
+            <form id="registrationForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="regName">Ваше имя *</label>
+                    <input type="text" id="regName" name="name" required placeholder="Мадияр Бегенов">
+                </div>
+                <div class="form-group">
+                    <label for="regMessage">Расскажите о себе (страна, специальность, бюджет) *</label>
+                    <textarea id="regMessage" name="message" required placeholder="Хочу поступить на программу бакалавриата по бизнесу. Бюджет до $15,000 в год."></textarea>
+                </div>
+                <button type="submit" class="btn" id="regSubmitBtn">Отправить заявку</button>
+                <div class="success-message" id="regSuccessMessage">✅ Заявка отправлена! Проверьте Instagram DM для получения кода доступа.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно ввода кода -->
+    <div class="overlay hidden" id="codeOverlay">
+        <div class="modal">
+            <span class="flag-large">🇺🇸</span>
+            <h2>Введите кодовое слово</h2>
+            <p>Введите кодовое слово, которое мы отправили вам в Instagram DM</p>
+            
+            <form id="codeForm" onsubmit="handleCodeSubmit(event)">
+                <div class="form-group">
+                    <input type="text" class="code-input" id="codeInput" placeholder="Введите слово" autocomplete="off">
+                </div>
+                <button type="submit" class="btn" id="codeSubmitBtn">Открыть таблицу</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegistration()">Вернуться к регистрации</button>
+                <div class="error-message" id="codeErrorMessage">❌ Неверное кодовое слово. Проверьте Instagram DM и попробуйте еще раз.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <div style="font-size: 80px; margin-bottom: 20px; line-height: 1;">🇺🇸</div>
+            <h1>Университеты США</h1>
+            <div class="subtitle">
+                Приветствуем! Эта таблица — результат экспертной аналитики Sapaly Education. 
+                Мы разрабатываем индивидуальные и <strong>гарантированные стратегии поступления</strong> 
+                для студентов из Казахстана и всего СНГ в ведущие университеты 
+                <strong>Америки, Европы и Азии</strong>. Наша цель — обеспечить ваше зачисление 
+                в сильный вуз мира с максимальной финансовой поддержкой.
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Университет</th>
+                        <th>Страна</th>
+                        <th>Город</th>
+                        <th>Стоимость<br>обучения</th>
+                        <th>Процент<br>поступления</th>
+                        <th>Макс. фин.<br>помощь</th>
+                        <th>Полный<br>грант?</th>
+                        <th>Дедлайн<br>ранней</th>
+                        <th>Дедлайн<br>основной</th>
+                        <th>TOEFL/<br>IELTS/<br>Duolingo</th>
+                        <th>SAT</th>
+                        <th>Эссе</th>
+                        <th>Рекомендательные<br>письма</th>
+                        <th>Стоимость<br>заявки</th>
+                        <th>Ссылка на<br>заявку</th>
+                        <th>Сайт<br>университета</th>
+                        <th>Сайт<br>фин. помощи</th>
+                        <th>Рейтинг<br>по стране</th>
+                        <th>Рейтинг<br>в мире</th>
+                        <th>Профессии</th>
+                        <th>Доп.<br>комментарии</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="university-name">Princeton University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Princeton, NJ</td>
+                        <td class="price">$59,710</td>
+                        <td><span class="percentage low">4.5%</span></td>
+                        <td class="price">$83,140</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.princeton.edu" target="_blank" class="website-link">princeton.edu</a></td>
+                        <td><a href="https://princeton.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Идеальное место для бакалавриата. Need-Blind для всех. Один из самых безопасных кампусов.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Harvard University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Cambridge, MA</td>
+                        <td class="price">$59,276</td>
+                        <td><span class="percentage low">3.4%</span></td>
+                        <td class="price">$82,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.harvard.edu" target="_blank" class="website-link">harvard.edu</a></td>
+                        <td><a href="https://harvard.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Бренд №1 в мире. Need-Blind. Если семья <$85k/год — обучение бесплатно.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">MIT</div>
+                        </td>
+                        <td>США</td>
+                        <td>Cambridge, MA</td>
+                        <td class="price">$60,156</td>
+                        <td><span class="percentage low">4.0%</span></td>
+                        <td class="price">$82,730</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.mit.edu" target="_blank" class="website-link">mit.edu</a></td>
+                        <td><a href="https://mit.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Рай для инженеров. Need-Blind. Требуют самоиронию и креативность.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Stanford University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Stanford, CA</td>
+                        <td class="price">$62,000</td>
+                        <td><span class="percentage low">3.9%</span></td>
+                        <td class="price">$87,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.stanford.edu" target="_blank" class="website-link">stanford.edu</a></td>
+                        <td><a href="https://stanford.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Сердце Кремниевой долины. Need-Aware. Огромный кампус, очень спортивный вуз.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Yale University</div>
+                        </td>
+                        <td>США</td>
+                        <td>New Haven, CT</td>
+                        <td class="price">$64,700</td>
+                        <td><span class="percentage low">4.5%</span></td>
+                        <td class="price">$83,880</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>SAT рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.yale.edu" target="_blank" class="website-link">yale.edu</a></td>
+                        <td><a href="https://yale.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>5-15</td>
+                        <td>200-400</td>
+                        <td>Гуманитарные науки</td>
+                        <td>Лучший для гуманитариев и политиков. Need-Blind. Residential Colleges (как в Гарри Поттере).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Columbia University</div>
+                        </td>
+                        <td>США</td>
+                        <td>New York City, NY</td>
+                        <td class="price">$65,524</td>
+                        <td><span class="percentage low">3.9%</span></td>
+                        <td class="price">$89,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.columbia.edu" target="_blank" class="website-link">columbia.edu</a></td>
+                        <td><a href="https://columbia.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>В центре Нью-Йорка. Need-Aware. Core Curriculum (обязательные предметы для всех).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">California Institute of Technology</div>
+                        </td>
+                        <td>США</td>
+                        <td>Pasadena, CA</td>
+                        <td class="price">$60,864</td>
+                        <td><span class="percentage low">2.7%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.caltech.edu" target="_blank" class="website-link">caltech.edu</a></td>
+                        <td><a href="https://caltech.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Главный конкурент MIT. Need-Aware. Соотношение студентов к профессорам 3:1.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Pennsylvania</div>
+                        </td>
+                        <td>США</td>
+                        <td>Philadelphia, PA</td>
+                        <td class="price">$66,100</td>
+                        <td><span class="percentage low">5.9%</span></td>
+                        <td class="price">$89,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.upenn.edu" target="_blank" class="website-link">upenn.edu</a></td>
+                        <td><a href="https://upenn.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Wharton — бизнес-школа №1. Need-Aware (для Канады/Мексики Need-Blind).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Brown University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Providence, RI</td>
+                        <td class="price">$65,656</td>
+                        <td><span class="percentage low">5.1%</span></td>
+                        <td class="price">$87,648</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.brown.edu" target="_blank" class="website-link">brown.edu</a></td>
+                        <td><a href="https://brown.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Самый свободный и счастливый. Need-Blind (с 2025). Open Curriculum — нет обязательных предметов.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Dartmouth College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Hanover, NH</td>
+                        <td class="price">$63,684</td>
+                        <td><span class="percentage low">6.2%</span></td>
+                        <td class="price">$87,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>3 письма</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.dartmouth.edu" target="_blank" class="website-link">dartmouth.edu</a></td>
+                        <td><a href="https://dartmouth.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Самый маленький в Лиге Плюща. Need-Blind. Peer Recommendation (письмо от сверстника).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Cornell University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Ithaca, NY</td>
+                        <td class="price">$66,014</td>
+                        <td><span class="percentage low">7.9%</span></td>
+                        <td class="price">$88,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional/Рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cornell.edu" target="_blank" class="website-link">cornell.edu</a></td>
+                        <td><a href="https://cornell.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>20-30</td>
+                        <td>500-800</td>
+                        <td>Различные</td>
+                        <td>Самый крупный в Лиге Плюща. Need-Aware. 'Easy to get in, hard to stay in'.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Chicago</div>
+                        </td>
+                        <td>США</td>
+                        <td>Chicago, IL</td>
+                        <td class="price">$65,619</td>
+                        <td><span class="percentage low">5.0%</span></td>
+                        <td class="price">$89,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional/Рекомендуется</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.uchicago.edu" target="_blank" class="website-link">uchicago.edu</a></td>
+                        <td><a href="https://uchicago.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Для тех, кто любит учиться. Need-Aware. Самые странные эссе в мире.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Duke University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Durham, NC</td>
+                        <td class="price">$66,325</td>
+                        <td><span class="percentage low">6.0%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.duke.edu" target="_blank" class="website-link">duke.edu</a></td>
+                        <td><a href="https://duke.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Гарвард юга. Need-Aware (20-25 мест на курс для иностранцев). Баскетбол — религия.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Northwestern University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Evanston, IL</td>
+                        <td class="price">$67,158</td>
+                        <td><span class="percentage low">7.0%</span></td>
+                        <td class="price">$91,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.northwestern.edu" target="_blank" class="website-link">northwestern.edu</a></td>
+                        <td><a href="https://northwestern.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Силен в медиа и драме. Need-Aware. Medill — лучшая журналистика в США.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Johns Hopkins University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Baltimore, MD</td>
+                        <td class="price">$64,000</td>
+                        <td><span class="percentage low">6.5%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.jhu.edu" target="_blank" class="website-link">jhu.edu</a></td>
+                        <td><a href="https://jhu.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Медицина</td>
+                        <td>Главный медицинский центр мира. Need-Aware. Невероятные возможности для исследований.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Rice University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Houston, TX</td>
+                        <td class="price">$60,000</td>
+                        <td><span class="percentage low">7.7%</span></td>
+                        <td class="price">$78,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.rice.edu" target="_blank" class="website-link">rice.edu</a></td>
+                        <td><a href="https://rice.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Лучшее качество жизни. Need-Aware. Дешевле аналогов. Система жилых колледжей.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Vanderbilt University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Nashville, TN</td>
+                        <td class="price">$63,946</td>
+                        <td><span class="percentage low">5.6%</span></td>
+                        <td class="price">$89,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.vanderbilt.edu" target="_blank" class="website-link">vanderbilt.edu</a></td>
+                        <td><a href="https://vanderbilt.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Южный шарм и музыка. Need-Aware. Merit Scholarships (за талант). 'Happiest Students'.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Notre Dame</div>
+                        </td>
+                        <td>США</td>
+                        <td>Notre Dame, IN</td>
+                        <td class="price">$65,025</td>
+                        <td><span class="percentage low">12%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nd.edu" target="_blank" class="website-link">nd.edu</a></td>
+                        <td><a href="https://nd.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Главный католический вуз. Need-Aware (переход на Need-Blind). 'Fighting Irish'.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Washington University in St. Louis</div>
+                        </td>
+                        <td>США</td>
+                        <td>St. Louis, MO</td>
+                        <td class="price">$64,500</td>
+                        <td><span class="percentage low">11%</span></td>
+                        <td class="price">$88,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.wustl.edu" target="_blank" class="website-link">wustl.edu</a></td>
+                        <td><a href="https://wustl.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Лучшие общежития и еда. Need-Aware. Очень богатый вуз. Студенты называют 'WashU'.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Georgetown University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Washington D.C.</td>
+                        <td class="price">$67,824</td>
+                        <td><span class="percentage low">12%</span></td>
+                        <td class="price">$90,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.georgetown.edu" target="_blank" class="website-link">georgetown.edu</a></td>
+                        <td><a href="https://georgetown.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Кузница политиков. Очень ограниченная помощь для иностранцев. Билл Клинтон — выпускник.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Williams College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Williamstown, MA</td>
+                        <td class="price">$64,540</td>
+                        <td><span class="percentage low">9.8%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.williams.edu" target="_blank" class="website-link">williams.edu</a></td>
+                        <td><a href="https://williams.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>№1 в рейтинге колледжей. Need-Aware. 'Tutorials': 2 студента + 1 профессор.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Amherst College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Amherst, MA</td>
+                        <td class="price">$67,280</td>
+                        <td><span class="percentage low">9.0%</span></td>
+                        <td class="price">$88,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.amherst.edu" target="_blank" class="website-link">amherst.edu</a></td>
+                        <td><a href="https://amherst.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Самый доступный для иностранцев. Need-Blind. Five College Consortium. Open Curriculum.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Swarthmore College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Swarthmore, PA</td>
+                        <td class="price">$61,992</td>
+                        <td><span class="percentage low">6.9%</span></td>
+                        <td class="price">$81,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.swarthmore.edu" target="_blank" class="website-link">swarthmore.edu</a></td>
+                        <td><a href="https://swarthmore.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Интеллектуальный 'спецназ'. Need-Aware. Quaker Consortium (можно учиться в UPenn).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Pomona College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Claremont, CA</td>
+                        <td class="price">$62,000</td>
+                        <td><span class="percentage low">6.6%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.pomona.edu" target="_blank" class="website-link">pomona.edu</a></td>
+                        <td><a href="https://pomona.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>'Гарвард на пляже'. Need-Aware. Claremont Colleges (5 колледжей на одной территории).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Bowdoin College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Brunswick, ME</td>
+                        <td class="price">$64,304</td>
+                        <td><span class="percentage low">8.7%</span></td>
+                        <td class="price">$82,500</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bowdoin.edu" target="_blank" class="website-link">bowdoin.edu</a></td>
+                        <td><a href="https://bowdoin.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Для любителей природы и хорошей еды. Need-Blind (с 2022). Лучшая еда в столовых США.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Wellesley College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Wellesley, MA</td>
+                        <td class="price">$64,000</td>
+                        <td><span class="percentage low">13%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.wellesley.edu" target="_blank" class="website-link">wellesley.edu</a></td>
+                        <td><a href="https://wellesley.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Самый престижный женский колледж. Need-Aware. Только для девушек. Можно учиться в MIT.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Emory University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Atlanta, GA</td>
+                        <td class="price">$63,400</td>
+                        <td><span class="percentage low">11%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.emory.edu" target="_blank" class="website-link">emory.edu</a></td>
+                        <td><a href="https://emory.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Топ-университет в Атланте. Need-Aware. 'Coca-Cola University' (огромный бюджет).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Carnegie Mellon University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Pittsburgh, PA</td>
+                        <td class="price">$64,596</td>
+                        <td><span class="percentage low">11%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cmu.edu" target="_blank" class="website-link">cmu.edu</a></td>
+                        <td><a href="https://cmu.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>5-15</td>
+                        <td>200-400</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Лучший в мире по IT и AI. НЕТ финансовой помощи для иностранцев. CS <4% поступления.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">New York University</div>
+                        </td>
+                        <td>США</td>
+                        <td>New York City, NY</td>
+                        <td class="price">$60,438</td>
+                        <td><span class="percentage low">8%</span></td>
+                        <td class="price">$90,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.nyu.edu" target="_blank" class="website-link">nyu.edu</a></td>
+                        <td><a href="https://nyu.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Университет без границ. ОЧЕНЬ РЕДКО полный грант для иностранцев. Город — ваш кампус.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Southern California</div>
+                        </td>
+                        <td>США</td>
+                        <td>Los Angeles, CA</td>
+                        <td class="price">$66,640</td>
+                        <td><span class="percentage low">10%</span></td>
+                        <td class="price">$90,000</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.usc.edu" target="_blank" class="website-link">usc.edu</a></td>
+                        <td><a href="https://usc.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика, IT, Компьютерные науки</td>
+                        <td>Голливуд, спорт и бизнес. НЕТ Need-Based. Merit Scholarships (50-100%). Дедлайн стипендии: 1 декабря!</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Michigan</div>
+                        </td>
+                        <td>США</td>
+                        <td>Ann Arbor, MI</td>
+                        <td class="price">$58,072</td>
+                        <td><span class="percentage low">17%</span></td>
+                        <td class="price">$76,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.umich.edu" target="_blank" class="website-link">umich.edu</a></td>
+                        <td><a href="https://umich.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Лучший государственный вуз Среднего Запада. НЕТ грантов для иностранцев. 'The Big House' (107,000 мест).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Tufts University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Medford, MA</td>
+                        <td class="price">$66,358</td>
+                        <td><span class="percentage low">10%</span></td>
+                        <td class="price">$89,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.tufts.edu" target="_blank" class="website-link">tufts.edu</a></td>
+                        <td><a href="https://tufts.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Университет международников. Need-Aware. Талисман — слон Джамбо.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Virginia</div>
+                        </td>
+                        <td>США</td>
+                        <td>Charlottesville, VA</td>
+                        <td class="price">$58,000</td>
+                        <td><span class="percentage low">16%</span></td>
+                        <td class="price">$78,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.virginia.edu" target="_blank" class="website-link">virginia.edu</a></td>
+                        <td><a href="https://virginia.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Детище Томаса Джефферсона. НЕТ помощи для иностранцев. Самый красивый кампус (UNESCO).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Georgia Institute of Technology</div>
+                        </td>
+                        <td>США</td>
+                        <td>Atlanta, GA</td>
+                        <td class="price">$31,370</td>
+                        <td><span class="percentage low">16%</span></td>
+                        <td class="price">$53,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 90+</td>
+                        <td>Required</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.gatech.edu" target="_blank" class="website-link">gatech.edu</a></td>
+                        <td><a href="https://gatech.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Лучшее соотношение цена/качество. НЕТ помощи. Дешевле в 2 раза. CS <10%.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Boston University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Boston, MA</td>
+                        <td class="price">$65,168</td>
+                        <td><span class="percentage low">14%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.bu.edu" target="_blank" class="website-link">bu.edu</a></td>
+                        <td><a href="https://bu.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Городской вуз. РЕДКО полный грант. Trustee Scholarship (20 человек в год). Дедлайн стипендии: 1 декабря!</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Davidson College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Davidson, NC</td>
+                        <td class="price">$60,050</td>
+                        <td><span class="percentage low">14.5%</span></td>
+                        <td class="price">$79,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>1 письмо</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.davidson.edu" target="_blank" class="website-link">davidson.edu</a></td>
+                        <td><a href="https://davidson.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Вуз Стефена Карри. Need-Blind (близко). Honor Code (экзамены без надзора).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of North Carolina at Chapel Hill</div>
+                        </td>
+                        <td>США</td>
+                        <td>Chapel Hill, NC</td>
+                        <td class="price">$39,000</td>
+                        <td><span class="percentage low">17%</span></td>
+                        <td class="price">$58,000</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.unc.edu" target="_blank" class="website-link">unc.edu</a></td>
+                        <td><a href="https://unc.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>30-50</td>
+                        <td>800-1000</td>
+                        <td>Различные</td>
+                        <td>Старейший государственный университет. НЕТ помощи. 82% студентов из штата. Майкл Джордан — выпускник.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Middlebury College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Middlebury, VT</td>
+                        <td class="price">$65,280</td>
+                        <td><span class="percentage low">13%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.middlebury.edu" target="_blank" class="website-link">middlebury.edu</a></td>
+                        <td><a href="https://middlebury.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>1-5</td>
+                        <td>50-100</td>
+                        <td>Различные</td>
+                        <td>Лучший языковой вуз. Need-Aware. 'Language Pledge' (клятва говорить только на изучаемом языке).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Washington and Lee University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Lexington, VA</td>
+                        <td class="price">$64,525</td>
+                        <td><span class="percentage low">17%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.wlu.edu" target="_blank" class="website-link">wlu.edu</a></td>
+                        <td><a href="https://wlu.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Джентльменский клуб. Johnson Scholarship (10% курса). Покрывает обучение + проживание + $7000 на лето.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Claremont McKenna College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Claremont, CA</td>
+                        <td class="price">$64,150</td>
+                        <td><span class="percentage low">10%</span></td>
+                        <td class="price">$86,500</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.cmc.edu" target="_blank" class="website-link">cmc.edu</a></td>
+                        <td><a href="https://cmc.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Кузница лидеров и экономистов. Need-Aware. Выпускники зарабатывают больше многих 'Плющей'.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Texas at Austin</div>
+                        </td>
+                        <td>США</td>
+                        <td>Austin, TX</td>
+                        <td class="price">$45,000</td>
+                        <td><span class="percentage medium">31%</span></td>
+                        <td class="price">$65,000</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>Январь</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.utexas.edu" target="_blank" class="website-link">utexas.edu</a></td>
+                        <td><a href="https://utexas.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Бизнес, Экономика</td>
+                        <td>Нефть, технологии и масштаб. НЕТ грантов. CS и бизнес <10%. Очень ранний дедлайн: 1 декабря!</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Illinois at Urbana-Champaign</div>
+                        </td>
+                        <td>США</td>
+                        <td>Urbana & Champaign, IL</td>
+                        <td class="price">$45,000</td>
+                        <td><span class="percentage medium">45%</span></td>
+                        <td class="price">$65,000</td>
+                        <td>Да</td>
+                        <td>Нет</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>3 письма</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.illinois.edu" target="_blank" class="website-link">illinois.edu</a></td>
+                        <td><a href="https://illinois.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Мекка для программистов. НЕТ помощи. CS ~6%. Здесь создали Mosaic и YouTube.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Purdue University</div>
+                        </td>
+                        <td>США</td>
+                        <td>West Lafayette, IN</td>
+                        <td class="price">$31,104</td>
+                        <td><span class="percentage high">50%</span></td>
+                        <td class="price">$48,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.purdue.edu" target="_blank" class="website-link">purdue.edu</a></td>
+                        <td><a href="https://purdue.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Инженерия</td>
+                        <td>Инженерный гигант. НЕТ помощи. Best Value (не повышает цены 12 лет). Нил Армстронг — выпускник.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Colgate University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Hamilton, NY</td>
+                        <td class="price">$67,024</td>
+                        <td><span class="percentage low">12%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 100+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.colgate.edu" target="_blank" class="website-link">colgate.edu</a></td>
+                        <td><a href="https://colgate.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>10-20</td>
+                        <td>300-500</td>
+                        <td>Различные</td>
+                        <td>Элитный колледж в глуши. Need-Aware. Число '13' — счастливое (основан 13 мужчинами с 13 долларами).</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Grinnell College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Grinnell, IA</td>
+                        <td class="price">$64,000</td>
+                        <td><span class="percentage low">11%</span></td>
+                        <td class="price">$82,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.grinnell.edu" target="_blank" class="website-link">grinnell.edu</a></td>
+                        <td><a href="https://grinnell.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>'Уоррен Баффет среди колледжей'. Need-Aware. Очень большой эндаумент. Роберт Нойс (Intel) — выпускник.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Vassar College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Poughkeepsie, NY</td>
+                        <td class="price">$67,800</td>
+                        <td><span class="percentage low">18%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.vassar.edu" target="_blank" class="website-link">vassar.edu</a></td>
+                        <td><a href="https://vassar.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Бывший женский колледж. Need-Aware. Нет Core Curriculum. Очень сильная арт-сцена.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Northeastern University</div>
+                        </td>
+                        <td>США</td>
+                        <td>Boston, MA</td>
+                        <td class="price">$63,141</td>
+                        <td><span class="percentage low">6%</span></td>
+                        <td class="price">$85,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>1 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.northeastern.edu" target="_blank" class="website-link">northeastern.edu</a></td>
+                        <td><a href="https://northeastern.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Король стажировок (Co-op). РЕДКО полный грант. Студенты работают полгода в компаниях вместо учебы.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Hamilton College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Clinton, NY</td>
+                        <td class="price">$65,000</td>
+                        <td><span class="percentage low">12%</span></td>
+                        <td class="price">$83,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>Январь</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.hamilton.edu" target="_blank" class="website-link">hamilton.edu</a></td>
+                        <td><a href="https://hamilton.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>'Know Thyself'. Учит писать идеально. Need-Aware ($3-4 млн в год на иностранцев). Open Curriculum.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">University of Wisconsin–Madison</div>
+                        </td>
+                        <td>США</td>
+                        <td>Madison, WI</td>
+                        <td class="price">$40,603</td>
+                        <td><span class="percentage medium">49%</span></td>
+                        <td class="price">$60,000</td>
+                        <td>Да</td>
+                        <td>1 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.wisc.edu" target="_blank" class="website-link">wisc.edu</a></td>
+                        <td><a href="https://wisc.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>IT, Компьютерные науки</td>
+                        <td>Классический Public Ivy. НЕТ помощи. Только частичные Merit Scholarships ($3-5k). Зимой лютый холод.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="university-name">Haverford College</div>
+                        </td>
+                        <td>США</td>
+                        <td>Haverford, PA</td>
+                        <td class="price">$66,500</td>
+                        <td><span class="percentage low">14%</span></td>
+                        <td class="price">$86,000</td>
+                        <td>Да</td>
+                        <td>15 ноября</td>
+                        <td>5 января</td>
+                        <td>TOEFL 80+</td>
+                        <td>Optional</td>
+                        <td>Эссе требуется</td>
+                        <td>Не требуется</td>
+                        <td>Бесплатно</td>
+                        <td><a href="https://www.commonapp.org" target="_blank" class="website-link">Заявка</a></td>
+                        <td><a href="https://www.haverford.edu" target="_blank" class="website-link">haverford.edu</a></td>
+                        <td><a href="https://haverford.edu/financial-aid" target="_blank" class="website-link">Фин. помощь</a></td>
+                        <td>50-100</td>
+                        <td>500-1000</td>
+                        <td>Различные</td>
+                        <td>Колледж чести. Need-Aware. Honor Code — студенты сами назначают даты экзаменов и пишут дома.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Кодовое слово для США (будет отправлено в Instagram DM после регистрации)
+        const COUNTRY_CODE = 'СТАТУЯСВОБОДЫ';
+        const COUNTRY_NAME = 'США';
+        const STORAGE_KEY = 'usa_authenticated';
+
+        // Проверяем, был ли пользователь уже авторизован
+        if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+            document.getElementById('registrationOverlay').classList.add('hidden');
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const name = form.regName.value;
+            const message = form.regMessage.value;
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate([30, 20, 30, 20, 30]);
+            }
+            
+            // Формируем сообщение для WhatsApp
+            const whatsappMessage = `Здравствуйте! Хочу зарегистрироваться на бесплатную консультацию по поступлению в университеты.\n\nИмя: ${name}\n\n${message ? 'О себе: ' + message : ''}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Открываем WhatsApp
+            window.open(`https://wa.me/77773133500?text=${encodedMessage}`, '_blank');
+            
+            // Показываем сообщение об успехе
+            document.getElementById('regSuccessMessage').style.display = 'block';
+            form.reset();
+            
+            // Через 2 секунды переходим к вводу кода
+            setTimeout(() => {
+                document.getElementById('registrationOverlay').classList.add('hidden');
+                document.getElementById('codeOverlay').classList.remove('hidden');
+                document.getElementById('codeInput').focus();
+            }, 2000);
+        }
+
+        function handleCodeSubmit(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('codeInput');
+            const error = document.getElementById('codeErrorMessage');
+            const codeOverlay = document.getElementById('codeOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Вибрация
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+
+            const inputValue = input.value.toUpperCase().trim();
+            if (inputValue === COUNTRY_CODE.toUpperCase()) {
+                // Правильное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 30, 50]);
+                }
+                codeOverlay.classList.add('hidden');
+                mainContent.style.display = 'block';
+                sessionStorage.setItem(STORAGE_KEY, 'true');
+            } else {
+                // Неверное кодовое слово
+                if (navigator.vibrate) {
+                    navigator.vibrate([100, 50, 100]);
+                }
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+                input.style.borderColor = '#bf2600';
+                setTimeout(() => {
+                    input.style.borderColor = '#d2d2d7';
+                }, 1000);
+            }
+        }
+
+        function showRegistration() {
+            document.getElementById('codeOverlay').classList.add('hidden');
+            document.getElementById('registrationOverlay').classList.remove('hidden');
+        }
+
+        // Автоматическая проверка при вводе 4 цифр
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+                
+                codeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleCodeSubmit(e);
+                    }
+                });
+            }
+
+            // Эффекты для всех кнопок
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
